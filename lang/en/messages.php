@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'dashboard' => 'Dashboard',
+    'welcome' => 'Welcome back',
+    'search' => 'Search anything...',
+    'notifications' => 'Notifications',
+    'profile' => 'Profile',
+    'settings' => 'Settings',
+    'logout' => 'Logout',
+    'cancel' => 'Cancel',
+    'save' => 'Save Changes',
+    'delete' => 'Delete',
+    'edit' => 'Edit',
+    'view' => 'View',
+    'success' => 'Success',
+    'error' => 'Error',
+    'actions' => 'Actions',
+    'recent_activity' => 'Recent Activity',
+    'mark_all_read' => 'Mark all as read',
+    'all_rights_reserved' => 'All rights reserved.',
+    'support' => 'Support',
+    'privacy_policy' => 'Privacy Policy',
+    'documentation' => 'Documentation',
+];

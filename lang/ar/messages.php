@@ -1,0 +1,25 @@
+<?php
+
+return [
+    'dashboard' => 'لوحة التحكم',
+    'welcome' => 'مرحباً بك',
+    'search' => 'بحث عن أي شيء...',
+    'notifications' => 'التنبيهات',
+    'profile' => 'الملف الشخصي',
+    'settings' => 'الإعدادات',
+    'logout' => 'تسجيل الخروج',
+    'cancel' => 'إلغاء',
+    'save' => 'حفظ التغييرات',
+    'delete' => 'حذف',
+    'edit' => 'تعديل',
+    'view' => 'عرض',
+    'success' => 'نجاح',
+    'error' => 'خطأ',
+    'actions' => 'الإجراءات',
+    'recent_activity' => 'النشاط الأخير',
+    'mark_all_read' => 'تمييز الكل كمقروء',
+    'all_rights_reserved' => 'جميع الحقوق محفوظة.',
+    'support' => 'الدعم الفني',
+    'privacy_policy' => 'سياسة الخصوصية',
+    'documentation' => 'الوثائق',
+];
