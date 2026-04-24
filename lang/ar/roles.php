@@ -13,4 +13,8 @@ return [
     'placeholder_name'    => 'مثال: مشرف',
     'permissions_count'   => ':count صلاحيات',
     'matrix_title'        => 'مصفوفة الأدوار والصلاحيات',
+    'permissions_label'   => 'صلاحيات',
+    'users_label'         => 'مستخدمون',
+    'full_branch_access'  => 'صلاحية الوصول الكامل للفروع',
+    'full_branch_desc'    => 'يسمح بالوصول إلى جميع مواقع الفروع',
 ];

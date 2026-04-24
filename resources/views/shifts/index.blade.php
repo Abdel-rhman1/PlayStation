@@ -1,104 +1,119 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto space-y-8">
-    <div class="flex items-center justify-between">
+<div class="space-y-8 animate-in fade-in duration-700">
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-            <h2 class="text-3xl font-heading font-black text-gray-900 tracking-tight">Shift Management</h2>
-            <p class="text-gray-500 mt-1">Manage your work session and cash balance.</p>
+            <h2 class="text-3xl font-heading font-black text-gray-900 tracking-tight">{{ __('shifts.title_index') }}</h2>
+            <p class="text-gray-500 text-sm mt-1">{{ __('shifts.subtitle_index') }}</p>
         </div>
-        @if($currentShift)
-            <div class="px-4 py-2 rounded-xl bg-green-50 text-green-700 text-xs font-black uppercase tracking-widest flex items-center gap-2 border border-green-200">
-                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                Shift Active
-            </div>
-        @else
-            <div class="px-4 py-2 rounded-xl bg-gray-50 text-gray-400 text-xs font-black uppercase tracking-widest border border-gray-200">
-                Shift Closed
-            </div>
-        @endif
+        
+        <div class="flex items-center gap-3">
+            @if(Auth::user()->shifts()->active()->exists())
+                <a href="{{ route('shifts.active') }}" class="px-5 py-2.5 rounded-xl bg-green-500 text-white text-xs font-black uppercase tracking-widest hover:bg-green-600 transition-all shadow-lg shadow-green-200 flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                    {{ __('shifts.title_active') }}
+                </a>
+            @else
+                <a href="{{ route('shifts.start') }}" class="px-5 py-2.5 rounded-xl bg-primary-600 text-white text-xs font-black uppercase tracking-widest hover:bg-primary-700 transition-all shadow-lg shadow-primary-200 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                    {{ __('shifts.btn_start') }}
+                </a>
+            @endif
+        </div>
     </div>
 
-    @if(!$currentShift)
-        {{-- Start Shift Card --}}
-        <div class="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100 relative overflow-hidden">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-bl-full -z-10 opacity-50"></div>
-            
-            <div class="max-w-md">
-                <h3 class="text-2xl font-black text-gray-900 mb-2">Ready to start?</h3>
-                <p class="text-gray-500 mb-8 font-medium">Please enter your opening cash balance to start your work shift.</p>
-
-                <form action="{{ route('shifts.start') }}" method="POST" class="space-y-6">
-                    @csrf
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest ms-1">Opening Balance</label>
-                        <div class="relative">
-                            <span class="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
-                            <input type="number" step="0.01" name="opening_balance" value="0.00" required
-                                   class="w-full bg-gray-50 border-transparent focus:bg-white focus:ring-4 focus:ring-primary-50 rounded-2xl ps-10 pe-6 py-4 font-black text-gray-900">
-                        </div>
-                    </div>
-
-                    <button type="submit" class="w-full bg-primary-600 text-white font-black py-5 rounded-2xl shadow-xl shadow-primary-100 hover:bg-primary-700 active:scale-95 transition-all flex items-center justify-center gap-3">
-                        <span>Open Shift</span>
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                    </button>
-                </form>
-            </div>
+    <!-- Shifts Table -->
+    <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="bg-gray-50/50">
+                        <th class="px-8 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('shifts.col_shift_id') }}</th>
+                        <th class="px-8 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('shifts.col_started_at') }}</th>
+                        <th class="px-8 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('shifts.col_status') }}</th>
+                        <th class="px-8 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('shifts.col_opening_balance') }}</th>
+                        <th class="px-8 py-5 text-xs font-black text-gray-400 uppercase tracking-widest text-end">{{ __('shifts.col_actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    @forelse($shifts as $shift)
+                    <tr class="hover:bg-gray-50/50 transition-colors group">
+                        {{-- Shift ID --}}
+                        <td class="px-8 py-6">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-xl {{ $shift->status === 'open' ? 'bg-green-100 text-green-600' : 'bg-gray-50 text-gray-400' }} flex items-center justify-center">
+                                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <span class="font-black text-gray-900 text-lg leading-none">#{{ $shift->id }}</span>
+                            </div>
+                        </td>
+                        {{-- Start Time --}}
+                        <td class="px-8 py-6">
+                            <div class="flex flex-col gap-0.5">
+                                <span class="text-sm font-bold text-gray-800">{{ $shift->start_time->format('M d, Y') }}</span>
+                                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{{ $shift->start_time->format('h:i A') }}</span>
+                            </div>
+                        </td>
+                        {{-- Status --}}
+                        <td class="px-8 py-6">
+                            @if($shift->status === 'open')
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-black uppercase tracking-widest border border-green-100">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                    {{ __('shifts.status_open') }}
+                                </span>
+                            @else
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-black uppercase tracking-widest border border-gray-200">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                                    {{ __('shifts.status_closed') }}
+                                </span>
+                            @endif
+                        </td>
+                        {{-- Opening Balance --}}
+                        <td class="px-8 py-6">
+                            <span class="text-sm font-bold text-gray-700">${{ number_format($shift->opening_balance, 2) }}</span>
+                        </td>
+                        {{-- Actions --}}
+                        <td class="px-8 py-6 text-end">
+                            <a href="{{ route('shifts.summary', $shift) }}" 
+                               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-50 text-gray-500 hover:bg-primary-50 hover:text-primary-600 transition-all border border-gray-100 hover:border-primary-100 text-xs font-black uppercase tracking-widest">
+                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                {{ __('shifts.view_details') }}
+                            </a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="px-8 py-20 text-center">
+                            <div class="max-w-xs mx-auto space-y-4">
+                                <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-200 mx-auto">
+                                    <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                </div>
+                                <h4 class="text-lg font-bold text-gray-900">{{ __('shifts.no_shifts') }}</h4>
+                                <p class="text-sm text-gray-400">{{ __('shifts.subtitle_index') }}</p>
+                                <a href="{{ route('shifts.start') }}" class="inline-flex items-center gap-2 mt-2 px-5 py-2.5 rounded-xl bg-primary-600 text-white text-xs font-black uppercase tracking-widest hover:bg-primary-700 transition-all shadow-lg shadow-primary-200">
+                                    {{ __('shifts.btn_start') }}
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-    @else
-        {{-- Close Shift Card --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100">
-                <h3 class="text-xs font-black text-gray-400 uppercase tracking-widest mb-6">Active Shift Info</h3>
-                
-                <div class="space-y-6">
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-2xl bg-primary-50 flex items-center justify-center text-primary-600">
-                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        </div>
-                        <div>
-                            <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest">Started At</p>
-                            <p class="font-black text-gray-900">{{ $currentShift->start_time->format('H:i A') }}</p>
-                            <p class="text-xs text-gray-500 font-medium">{{ $currentShift->start_time->diffForHumans() }}</p>
-                        </div>
-                    </div>
 
-                    <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center text-green-600">
-                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        </div>
-                        <div>
-                            <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest">Opening Balance</p>
-                            <p class="font-black text-gray-900">${{ number_format($currentShift->opening_balance, 2) }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-900 rounded-[2.5rem] p-8 shadow-xl text-white">
-                <h3 class="text-xs font-black text-white/40 uppercase tracking-widest mb-6">Close Your Shift</h3>
-                
-                <form action="{{ route('shifts.close') }}" method="POST" class="space-y-6">
-                    @csrf
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-black text-white/50 uppercase tracking-widest ms-1">Closing Cash Balance</label>
-                        <div class="relative">
-                            <span class="absolute left-5 top-1/2 -translate-y-1/2 text-white/30 font-bold">$</span>
-                            <input type="number" step="0.01" name="closing_balance" required
-                                   class="w-full bg-white/5 border-transparent focus:bg-white/10 focus:ring-4 focus:ring-primary-500/20 rounded-2xl ps-10 pe-6 py-4 font-black text-white placeholder:text-white/10"
-                                   placeholder="Enter counted cash...">
-                        </div>
-                    </div>
-
-                    <p class="text-[10px] text-white/30 italic">Entering the closing balance will finalize all transactions for this shift and mark it as completed.</p>
-
-                    <button type="submit" class="w-full bg-white text-gray-900 font-black py-4 rounded-2xl hover:bg-gray-100 active:scale-95 transition-all uppercase tracking-widest text-xs">
-                        Finalize & Close Shift
-                    </button>
-                </form>
-            </div>
+        <!-- Pagination -->
+        @if($shifts->hasPages())
+        <div class="bg-gray-50/50 px-8 py-6 border-t border-gray-100">
+            {{ $shifts->links() }}
         </div>
-    @endif
+        @endif
+    </div>
 </div>
 @endsection

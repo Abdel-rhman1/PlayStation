@@ -22,4 +22,6 @@ return [
     'support' => 'Support',
     'privacy_policy' => 'Privacy Policy',
     'documentation' => 'Documentation',
+    'operations' => 'Operations',
+    'retail' => 'Retail & Strategy',
 ];

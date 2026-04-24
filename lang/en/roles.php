@@ -13,4 +13,8 @@ return [
     'placeholder_name'    => 'e.g. Moderator',
     'permissions_count'   => ':count Permissions',
     'matrix_title'        => 'Role & Permission Matrix',
+    'permissions_label'   => 'Permissions',
+    'users_label'         => 'Users',
+    'full_branch_access'  => 'Full Branch Access',
+    'full_branch_desc'    => 'Allows access to all branch locations',
 ];

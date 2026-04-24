@@ -39,29 +39,93 @@
                 ];
             @endphp
 
-            @foreach($sections as $title => $items)
-                <div class="space-y-3">
-                    <h3 class="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{{ $title }}</h3>
-                    <div class="space-y-1">
-                        @foreach($items as $item)
-                            @php $isActive = Request::url() == $item['route'] || Str::startsWith(Request::url(), $item['route'] . '/'); @endphp
-                            <a href="{{ $item['route'] }}" 
-                               class="group flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-200 {{ $isActive ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' : 'text-gray-500 hover:bg-gray-50 hover:text-primary-600' }}">
-                                <div class="w-8 h-8 rounded-lg flex items-center justify-center me-3 transition-colors {{ $isActive ? 'bg-white/20' : 'bg-gray-100 group-hover:bg-primary-50' }}">
-                                    <svg class="h-4 w-4 {{ $isActive ? 'text-white' : 'text-gray-400 group-hover:text-primary-600' }}" 
-                                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $item['icon'] }}" />
-                                    </svg>
-                                </div>
-                                {{ $item['name'] }}
-                                @if($isActive)
-                                    <div class="ms-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>
-                                @endif
-                            </a>
-                        @endforeach
-                    </div>
+            @php $user = auth()->user(); @endphp
+
+            {{-- Operations (all roles) --}}
+            <div class="space-y-3">
+                <h3 class="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{{ __('messages.operations') }}</h3>
+                <div class="space-y-1">
+                    @php
+                        $ops = [
+                            ['name' => __('messages.dashboard'), 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6', 'route' => route('dashboard')],
+                            ['name' => __('devices.title'), 'icon' => 'M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z', 'route' => route('devices.index')],
+                            ['name' => __('sessions.title'), 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'route' => route('sessions.index')],
+                            ['name' => __('shifts.title_index'), 'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'route' => route('shifts.index')],
+                        ];
+                    @endphp
+                    @foreach($ops as $item)
+                        @php $isActive = Request::url() == $item['route'] || Str::startsWith(Request::url(), $item['route'] . '/'); @endphp
+                        <a href="{{ $item['route'] }}"
+                           class="group flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-200 {{ $isActive ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' : 'text-gray-500 hover:bg-gray-50 hover:text-primary-600' }}">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center me-3 transition-colors {{ $isActive ? 'bg-white/20' : 'bg-gray-100 group-hover:bg-primary-50' }}">
+                                <svg class="h-4 w-4 {{ $isActive ? 'text-white' : 'text-gray-400 group-hover:text-primary-600' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $item['icon'] }}" />
+                                </svg>
+                            </div>
+                            {{ $item['name'] }}
+                            @if($isActive)<div class="ms-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>@endif
+                        </a>
+                    @endforeach
                 </div>
-            @endforeach
+            </div>
+
+            {{-- Retail & Strategy (all roles) --}}
+            <div class="space-y-3">
+                <h3 class="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{{ __('messages.retail') }}</h3>
+                <div class="space-y-1">
+                    @php
+                        $retail = [
+                            ['name' => __('pos.title'), 'icon' => 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z', 'route' => route('pos.index')],
+                            ['name' => __('pos.products'), 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', 'route' => route('products.index')],
+                            ['name' => __('reports.recent_orders'), 'icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', 'route' => route('orders.index')],
+                        ];
+                    @endphp
+                    @foreach($retail as $item)
+                        @php $isActive = Request::url() == $item['route'] || Str::startsWith(Request::url(), $item['route'] . '/'); @endphp
+                        <a href="{{ $item['route'] }}"
+                           class="group flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-200 {{ $isActive ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' : 'text-gray-500 hover:bg-gray-50 hover:text-primary-600' }}">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center me-3 transition-colors {{ $isActive ? 'bg-white/20' : 'bg-gray-100 group-hover:bg-primary-50' }}">
+                                <svg class="h-4 w-4 {{ $isActive ? 'text-white' : 'text-gray-400 group-hover:text-primary-600' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $item['icon'] }}" />
+                                </svg>
+                            </div>
+                            {{ $item['name'] }}
+                            @if($isActive)<div class="ms-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>@endif
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- Administration (Owner only) --}}
+            @if($user->isOwner())
+            <div class="space-y-3">
+                <h3 class="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Administration</h3>
+                <div class="space-y-1">
+                    @php
+                        $admin = [
+                            ['name' => __('expenses.title'), 'icon' => 'M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z', 'route' => route('expenses.index')],
+                            ['name' => __('reports.title'), 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', 'route' => route('reports.index')],
+                            ['name' => __('users.title'), 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z', 'route' => route('users.index')],
+                            ['name' => __('roles.title') ?? 'Roles', 'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', 'route' => route('roles.index')],
+                        ];
+                    @endphp
+                    @foreach($admin as $item)
+                        @php $isActive = Request::url() == $item['route'] || Str::startsWith(Request::url(), $item['route'] . '/'); @endphp
+                        <a href="{{ $item['route'] }}"
+                           class="group flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-200 {{ $isActive ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' : 'text-gray-500 hover:bg-gray-50 hover:text-primary-600' }}">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center me-3 transition-colors {{ $isActive ? 'bg-white/20' : 'bg-gray-100 group-hover:bg-primary-50' }}">
+                                <svg class="h-4 w-4 {{ $isActive ? 'text-white' : 'text-gray-400 group-hover:text-primary-600' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $item['icon'] }}" />
+                                </svg>
+                            </div>
+                            {{ $item['name'] }}
+                            @if($isActive)<div class="ms-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse"></div>@endif
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
 
             <!-- System Group (Separate Bottom) -->
             <div class="pt-4 border-t border-gray-50">

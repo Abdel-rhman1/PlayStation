@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Shift;
 use App\Services\Staff\ShiftService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ShiftController extends Controller
 {
@@ -13,15 +15,10 @@ class ShiftController extends Controller
         protected ShiftService $shiftService
     ) {}
 
-    /**
-     * Redirect to the correct page based on shift status.
-     */
     public function index()
     {
-        $currentShift = Auth::user()->shifts()->active()->first();
-        return $currentShift 
-            ? redirect()->route('shifts.active') 
-            : redirect()->route('shifts.start');
+        $shifts = Auth::user()->shifts()->latest()->paginate(15);
+        return view('shifts.index', compact('shifts'));
     }
 
     /**
@@ -92,7 +89,7 @@ class ShiftController extends Controller
      */
     public function show(Shift $shift)
     {
-        $this->authorize('view', $shift);
+        Gate::authorize('view', $shift);
         $summary = $this->shiftService->getShiftSummary($shift);
         return view('shifts.show', compact('shift', 'summary'));
     }
@@ -102,7 +99,7 @@ class ShiftController extends Controller
      */
     public function print(Shift $shift)
     {
-        $this->authorize('view', $shift);
+        Gate::authorize('view', $shift);
         $summary = $this->shiftService->calculateShiftSummary($shift);
         return view('shifts.report', compact('shift', 'summary'));
     }

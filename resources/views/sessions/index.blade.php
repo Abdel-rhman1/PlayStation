@@ -71,7 +71,7 @@
                         </td>
                         <td class="px-8 py-6">
                             <span class="px-3 py-1 rounded-full bg-gray-100 text-gray-600 text-[10px] font-black uppercase tracking-widest border border-gray-200">
-                                {{ $session->ended_at ? $session->started_at->diffInMinutes($session->ended_at) . ' mins' : __('sessions.active') }}
+                                {{ $session->ended_at ? $session->duration . ' mins' : __('sessions.active') }}
                             </span>
                         </td>
                         <td class="px-8 py-6 text-right">

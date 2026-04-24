@@ -22,4 +22,6 @@ return [
     'support' => 'الدعم الفني',
     'privacy_policy' => 'سياسة الخصوصية',
     'documentation' => 'الوثائق',
+    'operations' => 'العمليات',
+    'retail' => 'التجزئة والاستراتيجية',
 ];

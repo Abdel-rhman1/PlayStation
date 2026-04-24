@@ -49,4 +49,21 @@ class Session extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    /**
+     * Duration in minutes (always positive, uses ended_at or now for active sessions).
+     */
+    public function getDurationAttribute(): int
+    {
+        $end = $this->ended_at ?? now();
+        return (int) abs($this->started_at->diffInMinutes($end));
+    }
+
+    /**
+     * Alias for ended_at to support legacy view references to end_time.
+     */
+    public function getEndTimeAttribute()
+    {
+        return $this->ended_at;
+    }
 }
