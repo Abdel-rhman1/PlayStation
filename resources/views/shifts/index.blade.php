@@ -74,7 +74,7 @@
                         </td>
                         {{-- Opening Balance --}}
                         <td class="px-8 py-6">
-                            <span class="text-sm font-bold text-gray-700">${{ number_format($shift->opening_balance, 2) }}</span>
+                            <span class="text-sm font-bold text-gray-700">{{ __('messages.currency_symbol') }} {{ number_format($shift->opening_balance, 2) }}</span>
                         </td>
                         {{-- Actions --}}
                         <td class="px-8 py-6 text-end">

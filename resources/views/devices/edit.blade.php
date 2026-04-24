@@ -44,7 +44,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">{{ __('devices.hourly_rate') }} ($)</label>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">{{ __('devices.hourly_rate') }} ({{ __('messages.currency_symbol') }})</label>
                     <div class="relative">
                         <span class="absolute start-6 top-1/2 -translate-y-1/2 font-black text-gray-400">$</span>
                         <input type="number" step="0.01" name="hourly_rate" value="{{ old('hourly_rate', $device->hourly_rate) }}" required 
@@ -53,7 +53,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">{{ __('devices.fixed_rate') }} ($)</label>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">{{ __('devices.fixed_rate') }} ({{ __('messages.currency_symbol') }})</label>
                     <div class="relative">
                         <span class="absolute start-6 top-1/2 -translate-y-1/2 font-black text-gray-400">$</span>
                         <input type="number" step="0.01" name="fixed_rate" value="{{ old('fixed_rate', $device->fixed_rate) }}" 

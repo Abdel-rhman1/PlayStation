@@ -24,4 +24,5 @@ return [
     'documentation' => 'الوثائق',
     'operations' => 'العمليات',
     'retail' => 'التجزئة والاستراتيجية',
+    'currency_symbol' => 'ج.م',
 ];

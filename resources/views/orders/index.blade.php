@@ -51,7 +51,7 @@
                             <span class="text-sm text-gray-600 font-medium">{{ __('orders.item_count', ['count' => $order->items->count()]) }}</span>
                         </td>
                         <td class="px-8 py-6 text-end font-heading font-black text-gray-900">
-                            ${{ number_format($order->total_price, 2) }}
+                            {{ __('messages.currency_symbol') }} {{ number_format($order->total_price, 2) }}
                         </td>
                         <td class="px-8 py-6">
                             @if($order->status === 'paid' || $order->status === 'completed')

@@ -24,4 +24,5 @@ return [
     'documentation' => 'Documentation',
     'operations' => 'Operations',
     'retail' => 'Retail & Strategy',
+    'currency_symbol' => 'EGP',
 ];

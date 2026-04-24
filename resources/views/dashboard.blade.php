@@ -14,7 +14,7 @@
                 <div class="hidden lg:flex items-center gap-3 bg-primary-50 px-4 py-2 rounded-2xl border border-primary-100 shadow-sm">
                     <div class="flex flex-col">
                         <span class="text-[9px] font-black text-primary-600 uppercase tracking-widest leading-none">{{ __('dashboard.shift_revenue') }}</span>
-                        <span class="text-sm font-black text-primary-900">${{ number_format($shiftRevenue, 2) }}</span>
+                        <span class="text-sm font-black text-primary-900">{{ __('messages.currency_symbol') }} {{ number_format($shiftRevenue, 2) }}</span>
                     </div>
                     <div class="w-px h-6 bg-primary-200"></div>
                     <a href="{{ route('shifts.active') }}" class="flex items-center gap-2 group">
@@ -56,10 +56,10 @@
          }">
         @php
             $analytics = [
-                ['label' => __('reports.revenue'), 'value' => '$' . number_format($todayRevenue, 2), 'icon' => 'M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z', 'color' => 'blue'],
+                ['label' => __('reports.revenue'), 'value' => __('messages.currency_symbol') . ' ' . number_format($todayRevenue, 2), 'icon' => 'M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z', 'color' => 'blue'],
                 ['label' => __('reports.total_sessions'), 'value' => $totalSessionsToday, 'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'purple'],
                 ['label' => __('reports.active_devices'), 'value' => $activeDevicesCount, 'icon' => 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z', 'color' => 'green'],
-                ['label' => __('expenses.title'), 'value' => '$4,200', 'icon' => 'M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'red'],
+                ['label' => __('expenses.title'), 'value' => __('messages.currency_symbol') . ' ' . number_format($todayExpenses ?? 0, 2), 'icon' => 'M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z', 'color' => 'red'],
             ];
         @endphp
 
@@ -119,7 +119,7 @@
                                     {{ $session->end_time ? $session->duration . ' mins' : __('dashboard.active') }}
                                 </span>
                             </td>
-                            <td class="px-6 py-5 text-end font-black text-gray-900">${{ number_format($session->total_price, 2) }}</td>
+                            <td class="px-6 py-5 text-end font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($session->total_price, 2) }}</td>
                         </tr>
                         @empty
                         <tr>
@@ -139,33 +139,34 @@
             </div>
             <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 space-y-6">
                 @php
-                    $topDevices = [
-                        ['name' => 'PS5 Pro - VIP 1', 'revenue' => 450.00, 'usage' => 85, 'color' => 'primary'],
-                        ['name' => 'PS5 Pro - Main 4', 'revenue' => 380.50, 'usage' => 72, 'color' => 'purple'],
-                        ['name' => 'PS5 Pro - VIP 2', 'revenue' => 310.20, 'usage' => 64, 'color' => 'indigo'],
-                        ['name' => 'PS5 Slim - Room 1', 'revenue' => 280.00, 'usage' => 58, 'color' => 'blue'],
-                    ];
+                    $colors = ['primary', 'purple', 'indigo', 'blue'];
+                    $maxRev = $topDevices->max('total_revenue') ?: 1;
                 @endphp
 
-                @foreach($topDevices as $device)
+                @forelse($topDevices as $index => $device)
+                @php $color = $colors[$index % count($colors)]; $usage = round(($device->total_revenue / $maxRev) * 100); @endphp
                 <div class="space-y-3 group">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 rounded-full bg-{{ $device['color'] }}-500 group-hover:scale-150 transition-transform"></div>
-                            <span class="font-bold text-gray-900">{{ $device['name'] }}</span>
+                            <div class="w-2 h-2 rounded-full bg-{{ $color }}-500 group-hover:scale-150 transition-transform"></div>
+                            <span class="font-bold text-gray-900">{{ $device->name }}</span>
                         </div>
-                        <span class="text-sm font-black text-gray-900">${{ number_format($device['revenue'], 2) }}</span>
+                        <span class="text-sm font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($device->total_revenue, 2) }}</span>
                     </div>
                     <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                        <div class="h-full bg-{{ $device['color'] }}-500 rounded-full transition-all duration-1000 ease-out" 
-                             style="width: {{ $device['usage'] }}%"></div>
+                        <div class="h-full bg-{{ $color }}-500 rounded-full transition-all duration-1000 ease-out" 
+                             style="width: {{ $usage }}%"></div>
                     </div>
                     <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                         <span>{{ __('dashboard.utilization') }}</span>
-                        <span>{{ $device['usage'] }}%</span>
+                        <span>{{ $usage }}%</span>
                     </div>
                 </div>
-                @endforeach
+                @empty
+                <div class="py-10 text-center text-gray-400 italic">
+                    {{ __('dashboard.no_data_available') }}
+                </div>
+                @endforelse
 
                 <button class="w-full mt-4 py-4 rounded-2xl bg-gray-50 text-sm font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-all border border-transparent hover:border-gray-200">
                     {{ __('dashboard.detailed_analytics') }}

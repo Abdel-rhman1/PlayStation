@@ -56,7 +56,7 @@
             <div class="flex items-center gap-2 mt-2">
                 <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 bg-gray-50 px-2 py-1 rounded-md">{{ $device->branch->name ?? 'Main' }}</span>
                 <span class="text-gray-200">•</span>
-                <span class="text-[10px] font-black uppercase tracking-widest text-primary-500">${{ $device->hourly_rate }}/hr</span>
+                <span class="text-[10px] font-black uppercase tracking-widest text-primary-500">{{ __('messages.currency_symbol') }} {{ $device->hourly_rate }}/hr</span>
             </div>
         </div>
 
@@ -74,7 +74,7 @@
                 <div class="space-y-1 text-end">
                     <p class="text-[9px] text-gray-400 uppercase font-black tracking-widest">{{ __('sessions.cost') }}</p>
                     <div class="flex items-center justify-end gap-1">
-                        <span class="text-xs font-bold text-primary-500">$</span>
+                        <span class="text-xs font-bold text-primary-500">{{ __('messages.currency_symbol') }}</span>
                         <span class="text-2xl font-heading font-black text-gray-900 tabular-nums" x-text="costDisplay">0.00</span>
                     </div>
                 </div>

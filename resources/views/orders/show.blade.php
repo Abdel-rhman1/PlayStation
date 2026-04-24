@@ -44,10 +44,10 @@
                                 </div>
                                 <div>
                                     <p class="font-bold text-gray-900">{{ $item->product->name ?? 'Unknown Product' }}</p>
-                                    <p class="text-xs text-gray-500 font-bold">${{ number_format($item->price, 2) }} × {{ $item->quantity }}</p>
+                                    <p class="text-xs text-gray-500 font-bold">{{ __('messages.currency_symbol') }} {{ number_format($item->price, 2) }} × {{ $item->quantity }}</p>
                                 </div>
                             </div>
-                            <p class="text-lg font-heading font-black text-gray-900">${{ number_format($item->subtotal, 2) }}</p>
+                            <p class="text-lg font-heading font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($item->subtotal, 2) }}</p>
                         </div>
                     @endforeach
                 </div>
@@ -64,7 +64,7 @@
                 <div class="space-y-4">
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-500 font-bold">Subtotal</span>
-                        <span class="text-gray-900 font-bold">${{ number_format($order->total_price, 2) }}</span>
+                        <span class="text-gray-900 font-bold">{{ __('messages.currency_symbol') }} {{ number_format($order->total_price, 2) }}</span>
                     </div>
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-500 font-bold">Discount</span>
@@ -75,7 +75,7 @@
                     
                     <div class="flex justify-between items-end pt-2">
                         <span class="text-gray-900 font-black uppercase text-xs tracking-widest">Total</span>
-                        <span class="text-4xl font-heading font-black text-primary-600">${{ number_format($order->total_price, 2) }}</span>
+                        <span class="text-4xl font-heading font-black text-primary-600">{{ __('messages.currency_symbol') }} {{ number_format($order->total_price, 2) }}</span>
                     </div>
                 </div>
             </div>

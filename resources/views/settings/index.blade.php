@@ -75,7 +75,7 @@
                         <p class="text-primary-100 font-medium">{{ __('settings.renew') }} <span class="font-bold border-b border-primary-200 cursor-help">May 21, 2026</span></p>
                     </div>
                     <div class="text-end">
-                        <p class="text-5xl font-heading font-black mb-2">$99<span class="text-xl opacity-60">/mo</span></p>
+                        <p class="text-5xl font-heading font-black mb-2">{{ __('messages.currency_symbol') }} 99<span class="text-xl opacity-60">/mo</span></p>
                         <button class="bg-white text-primary-600 px-8 py-3 rounded-xl font-bold hover:bg-gray-50 transition-colors shadow-lg">{{ __('settings.manage_billing') }}</button>
                     </div>
                 </div>
@@ -129,11 +129,11 @@
 
                 <div class="grid grid-cols-2 gap-8">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('settings.std_rate') }} ($)</label>
+                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('settings.std_rate') }} ({{ __('messages.currency_symbol') }})</label>
                         <input type="number" class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 font-black text-xl" value="10.00">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('settings.vip_rate') }} ($)</label>
+                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('settings.vip_rate') }} ({{ __('messages.currency_symbol') }})</label>
                         <input type="number" class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 font-black text-xl" value="25.00">
                     </div>
                 </div>

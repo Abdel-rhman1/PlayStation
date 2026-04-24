@@ -37,7 +37,7 @@
                     </div>
                     <div>
                         <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest">{{ __('shifts.opening_drawer_cash') }}</p>
-                        <p class="text-xl font-black text-gray-900">${{ number_format($currentShift->opening_balance, 2) }}</p>
+                        <p class="text-xl font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($currentShift->opening_balance, 2) }}</p>
                     </div>
                 </div>
             </div>

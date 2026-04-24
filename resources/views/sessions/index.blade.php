@@ -76,7 +76,7 @@
                         </td>
                         <td class="px-8 py-6 text-right">
                             <span class="text-lg font-heading font-black text-gray-900">
-                                ${{ number_format($session->total_price, 2) }}
+                                {{ __('messages.currency_symbol') }} {{ number_format($session->total_price, 2) }}
                             </span>
                         </td>
                     </tr>

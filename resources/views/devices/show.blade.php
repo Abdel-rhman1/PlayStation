@@ -44,11 +44,11 @@
                     <div class="mt-4 space-y-4">
                         <div class="flex justify-between">
                             <span class="text-sm font-medium text-gray-500">{{ __('devices.hourly_rate') }}</span>
-                            <span class="text-sm font-black text-gray-900">${{ number_format($device->hourly_rate, 2) }}</span>
+                            <span class="text-sm font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($device->hourly_rate, 2) }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-sm font-medium text-gray-500">{{ __('devices.startup_fee') }}</span>
-                            <span class="text-sm font-black text-gray-900">${{ number_format($device->fixed_rate, 2) }}</span>
+                            <span class="text-sm font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($device->fixed_rate, 2) }}</span>
                         </div>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                                     {{ $session->total_duration ?? '0' }} mins
                                 </td>
                                 <td class="px-8 py-5 text-end font-heading font-black text-gray-900">
-                                    ${{ number_format($session->total_price, 2) }}
+                                    {{ __('messages.currency_symbol') }} {{ number_format($session->total_price, 2) }}
                                 </td>
                             </tr>
                             @empty

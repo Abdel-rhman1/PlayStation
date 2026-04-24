@@ -37,7 +37,7 @@
                         <p class="text-[10px] text-gray-400 mt-1 font-medium">{{ $product->category->name ?? __('pos.general') }}</p>
                     </div>
                     <div class="mt-2 flex items-center justify-between">
-                        <span class="text-sm font-black text-primary-600">${{ number_format($product->price, 2) }}</span>
+                        <span class="text-sm font-black text-primary-600">{{ __('messages.currency_symbol') }} {{ number_format($product->price, 2) }}</span>
                         <div class="w-6 h-6 bg-gray-100 rounded-md flex items-center justify-center text-gray-600">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" /></svg>
                         </div>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="text-right">
                     <p class="text-[10px] uppercase font-black text-gray-400 leading-none">{{ __('pos.total') }}</p>
-                    <p class="text-lg font-black text-primary-600" x-text="'$' + total.toFixed(2)"></p>
+                    <p class="text-lg font-black text-primary-600" x-text="'{{ __('messages.currency_symbol') }} ' + total.toFixed(2)"></p>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
                     <div class="flex items-center gap-3 p-3 rounded-xl border border-gray-50 hover:bg-gray-50 transition-colors">
                         <div class="flex-1 min-w-0">
                             <p class="text-xs font-bold text-gray-800 truncate" x-text="item.name"></p>
-                            <p class="text-[10px] font-black text-primary-500" x-text="'$' + item.price.toFixed(2)"></p>
+                            <p class="text-[10px] font-black text-primary-500" x-text="'{{ __('messages.currency_symbol') }} ' + item.price.toFixed(2)"></p>
                         </div>
                         <div class="flex items-center gap-2 bg-white rounded-lg p-0.5 border border-gray-100">
                             <button @click="updateQty(index, -1)" class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-red-500">-</button>
@@ -91,7 +91,7 @@
                             <button @click="updateQty(index, 1)" class="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-primary-600">+</button>
                         </div>
                         <div class="text-right w-14">
-                            <p class="text-xs font-black text-gray-900" x-text="'$' + (item.price * item.qty).toFixed(2)"></p>
+                            <p class="text-xs font-black text-gray-900" x-text="'{{ __('messages.currency_symbol') }} ' + (item.price * item.qty).toFixed(2)"></p>
                         </div>
                     </div>
                 </template>
@@ -113,7 +113,7 @@
 
                 <div class="flex justify-between items-center px-1">
                     <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('pos.total_amount') }}</span>
-                    <span class="text-2xl font-black text-primary-600" x-text="'$' + total.toFixed(2)"></span>
+                    <span class="text-2xl font-black text-primary-600" x-text="'{{ __('messages.currency_symbol') }} ' + total.toFixed(2)"></span>
                 </div>
 
                 <form action="{{ route('pos.orders.store') }}" method="POST" @submit.prevent="checkout()">
@@ -179,7 +179,7 @@
                     this.addToast('{{ __('pos.device_required_toast') }}', 'error');
                     return;
                 }
-                this.askConfirm('{{ __('pos.process_confirm_toast') }}', `{{ __('pos.total') }}: $${this.total.toFixed(2)}`, () => {
+                this.askConfirm('{{ __('pos.process_confirm_toast') }}', `{{ __('pos.total') }}: {{ __('messages.currency_symbol') }} ${this.total.toFixed(2)}`, () => {
                     this.$el.closest('form').submit();
                 });
             }

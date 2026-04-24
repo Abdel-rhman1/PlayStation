@@ -41,7 +41,7 @@
                             </span>
                         </td>
                         <td class="px-8 py-6">
-                            <span class="font-heading font-black text-gray-900">${{ number_format($product->price, 2) }}</span>
+                            <span class="font-heading font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($product->price, 2) }}</span>
                         </td>
                         <td class="px-8 py-6">
                             <div class="flex items-center gap-2">
@@ -113,7 +113,7 @@
 
                 <div class="grid grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('products.price') }} ($)</label>
+                        <label class="text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('products.price') }} ({{ __('messages.currency_symbol') }})</label>
                         <input type="number" step="0.01" name="price" x-model="formData.price" class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 transition-all font-bold" value="0.00">
                     </div>
                     <div class="space-y-2">

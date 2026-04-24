@@ -24,15 +24,15 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100">
             <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">{{ __('shifts.opening_balance') }}</p>
-            <p class="text-3xl font-heading font-black text-gray-900">${{ number_format($summary['opening_balance'], 2) }}</p>
+            <p class="text-3xl font-heading font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($summary['opening_balance'], 2) }}</p>
         </div>
         <div class="bg-gray-900 rounded-[2rem] p-8 shadow-xl text-white">
             <p class="text-[10px] text-white/40 font-black uppercase tracking-widest mb-1">{{ __('shifts.expected_revenue') }}</p>
-            <p class="text-3xl font-heading font-black text-primary-400">+${{ number_format($summary['total_revenue'], 2) }}</p>
+            <p class="text-3xl font-heading font-black text-primary-400">+{{ __('messages.currency_symbol') }} {{ number_format($summary['total_revenue'], 2) }}</p>
         </div>
         <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100">
             <p class="text-[10px] text-gray-400 font-black uppercase tracking-widest mb-1">{{ __('shifts.expenses_logged') }}</p>
-            <p class="text-3xl font-heading font-black text-red-500">-${{ number_format($summary['expenses_total'], 2) }}</p>
+            <p class="text-3xl font-heading font-black text-red-500">-{{ __('messages.currency_symbol') }} {{ number_format($summary['expenses_total'], 2) }}</p>
         </div>
     </div>
 
@@ -48,26 +48,26 @@
         <div class="p-8 space-y-4">
             <div class="flex justify-between items-center py-2">
                 <span class="text-gray-500 font-medium">{{ __('shifts.session_revenue') }}</span>
-                <span class="font-black text-gray-900">${{ number_format($summary['session_revenue'], 2) }}</span>
+                <span class="font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($summary['session_revenue'], 2) }}</span>
             </div>
             <div class="flex justify-between items-center py-2">
                 <span class="text-gray-500 font-medium">{{ __('shifts.retail_sales') }}</span>
-                <span class="font-black text-gray-900">${{ number_format($summary['order_revenue'], 2) }}</span>
+                <span class="font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($summary['order_revenue'], 2) }}</span>
             </div>
             <hr class="border-gray-50">
             <div class="flex justify-between items-center py-2">
                 <span class="text-gray-900 font-black uppercase text-xs tracking-widest">{{ __('shifts.expected_cash') }}</span>
-                <span class="text-xl font-heading font-black text-gray-900">${{ number_format($summary['expected_cash'], 2) }}</span>
+                <span class="text-xl font-heading font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($summary['expected_cash'], 2) }}</span>
             </div>
             <div class="flex justify-between items-center py-4 bg-primary-50 rounded-2xl px-6">
                 <span class="text-primary-800 font-black uppercase text-xs tracking-widest">{{ __('shifts.employee_counted') }}</span>
-                <span class="text-2xl font-heading font-black text-primary-600">${{ number_format($summary['actual_cash'], 2) }}</span>
+                <span class="text-2xl font-heading font-black text-primary-600">{{ __('messages.currency_symbol') }} {{ number_format($summary['actual_cash'], 2) }}</span>
             </div>
 
             @if($summary['difference'] != 0)
             <div class="p-4 rounded-xl {{ $summary['difference'] > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700' }} text-sm font-bold flex items-center gap-3">
                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                {{ __('shifts.discrepancy_amount') }} ${{ number_format($summary['difference'], 2) }} ({{ $summary['difference'] > 0 ? __('shifts.surplus') : __('shifts.deficit') }})
+                {{ __('shifts.discrepancy_amount') }} {{ __('messages.currency_symbol') }} {{ number_format($summary['difference'], 2) }} ({{ $summary['difference'] > 0 ? __('shifts.surplus') : __('shifts.deficit') }})
             </div>
             @endif
         </div>

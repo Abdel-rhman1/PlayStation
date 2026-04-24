@@ -235,7 +235,7 @@
             </div>
             <div class="detail-row">
                 <span>Usage Cost</span>
-                <span>{{ number_format($data['device']['price'], 2) }}</span>
+                <span>{{ __('messages.currency_symbol') }} {{ number_format($data['device']['price'], 2) }}</span>
             </div>
         </div>
 
@@ -254,10 +254,10 @@
                     <tr>
                         <td>
                             <span class="item-name">{{ $item['product_name'] }}</span>
-                            <span class="item-meta">{{ $item['quantity'] }} x {{ number_format($item['unit_price'], 2) }}</span>
+                            <span class="item-meta">{{ $item['quantity'] }} x {{ __('messages.currency_symbol') }} {{ number_format($item['unit_price'], 2) }}</span>
                         </td>
                         <td style="text-align: right; font-weight: 800;">
-                            {{ number_format($item['total_price'], 2) }}
+                            {{ __('messages.currency_symbol') }} {{ number_format($item['total_price'], 2) }}
                         </td>
                     </tr>
                     @endforeach
@@ -269,15 +269,15 @@
         <div class="summary-box">
             <div class="detail-row">
                 <span>Subtotal (Usage)</span>
-                <span>{{ number_format($data['device']['price'], 2) }}</span>
+                <span>{{ __('messages.currency_symbol') }} {{ number_format($data['device']['price'], 2) }}</span>
             </div>
             <div class="detail-row">
                 <span>Subtotal (Buffet)</span>
-                <span>{{ number_format($data['orders']['total'], 2) }}</span>
+                <span>{{ __('messages.currency_symbol') }} {{ number_format($data['orders']['total'], 2) }}</span>
             </div>
             <div class="grand-total">
                 <span class="grand-total-label">Total Payable</span>
-                <span class="grand-total-amount">{{ number_format($data['grand_total'], 2) }}</span>
+                <span class="grand-total-amount">{{ __('messages.currency_symbol') }} {{ number_format($data['grand_total'], 2) }}</span>
             </div>
         </div>
 

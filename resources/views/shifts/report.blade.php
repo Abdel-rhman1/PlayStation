@@ -136,30 +136,30 @@
 
     <div class="data-row">
         <span>Opening Balance:</span>
-        <span>${{ number_format($shift->opening_balance, 2) }}</span>
+        <span>{{ __('messages.currency_symbol') }} {{ number_format($shift->opening_balance, 2) }}</span>
     </div>
 
     <div class="divider"></div>
 
     <div class="data-row">
         <span>Sessions Rev:</span>
-        <span>+${{ number_format($summary['sessions_total'], 2) }}</span>
+        <span>+{{ __('messages.currency_symbol') }} {{ number_format($summary['sessions_total'], 2) }}</span>
     </div>
 
     <div class="data-row">
         <span>POS Orders:</span>
-        <span>+${{ number_format($summary['orders_total'], 2) }}</span>
+        <span>+{{ __('messages.currency_symbol') }} {{ number_format($summary['orders_total'], 2) }}</span>
     </div>
 
     <div class="data-row">
         <span>Expenses:</span>
-        <span>-${{ number_format($summary['expenses_total'], 2) }}</span>
+        <span>-{{ __('messages.currency_symbol') }} {{ number_format($summary['expenses_total'], 2) }}</span>
     </div>
 
     <div class="total-box">
         <div class="data-row grand-total">
             <span>NET PROFIT:</span>
-            <span>${{ number_format($summary['net_total'], 2) }}</span>
+            <span>{{ __('messages.currency_symbol') }} {{ number_format($summary['net_total'], 2) }}</span>
         </div>
     </div>
 
@@ -167,7 +167,7 @@
     
     <div class="data-row" style="font-weight: bold;">
         <span>Final Cash Count:</span>
-        <span>${{ number_format($shift->closing_balance, 2) }}</span>
+        <span>{{ __('messages.currency_symbol') }} {{ number_format($shift->closing_balance, 2) }}</span>
     </div>
 
     <div class="footer">

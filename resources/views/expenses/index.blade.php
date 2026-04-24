@@ -28,7 +28,7 @@
                     @csrf
                     
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('expenses.amount') }} ($)</label>
+                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('expenses.amount') }} ({{ __('messages.currency_symbol') }})</label>
                         <input type="number" step="0.01" name="amount" value="{{ old('amount') }}"
                                class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 transition-all font-bold @error('amount') border-red-300 @enderror" 
                                placeholder="0.00">
@@ -84,7 +84,7 @@
                                 </div>
                             </td>
                             <td class="px-8 py-6 text-right font-heading font-black text-gray-900">
-                                ${{ number_format($expense->amount, 2) }}
+                                {{ __('messages.currency_symbol') }} {{ number_format($expense->amount, 2) }}
                             </td>
                         </tr>
                         @empty

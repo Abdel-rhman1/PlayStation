@@ -38,7 +38,7 @@
                     <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 </div>
                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{{ __('reports.revenue') }}</p>
-                <p class="text-5xl font-heading font-black text-gray-900 tracking-tighter">${{ number_format($totalRevenue ?? 0, 2) }}</p>
+                <p class="text-5xl font-heading font-black text-gray-900 tracking-tighter">{{ __('messages.currency_symbol') }} {{ number_format($totalRevenue ?? 0, 2) }}</p>
             </div>
             <div class="mt-8 flex items-center gap-2 text-emerald-600 text-[10px] font-black uppercase tracking-widest bg-emerald-50 w-fit px-3 py-1.5 rounded-full border border-emerald-100">
                 {{ __('reports.revenue_source') }}
@@ -54,7 +54,7 @@
                     <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" /></svg>
                 </div>
                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{{ __('reports.operational_costs') }}</p>
-                <p class="text-5xl font-heading font-black text-gray-900 tracking-tighter">${{ number_format($totalExpenses ?? 0, 2) }}</p>
+                <p class="text-5xl font-heading font-black text-gray-900 tracking-tighter">{{ __('messages.currency_symbol') }} {{ number_format($totalExpenses ?? 0, 2) }}</p>
             </div>
             <div class="mt-8 flex items-center gap-2 text-rose-600 text-[10px] font-black uppercase tracking-widest bg-rose-50 w-fit px-3 py-1.5 rounded-full border border-rose-100">
                 {{ __('reports.expense_source') }}
@@ -72,7 +72,7 @@
                     <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>
                 </div>
                 <p class="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-1">{{ __('reports.net_profit') }}</p>
-                <p class="text-5xl font-heading font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">${{ number_format($netProfit ?? 0, 2) }}</p>
+                <p class="text-5xl font-heading font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">{{ __('messages.currency_symbol') }} {{ number_format($netProfit ?? 0, 2) }}</p>
             </div>
             <div class="mt-8 relative z-10 flex items-center gap-2 text-white/90 text-[10px] font-black uppercase tracking-widest bg-white/10 backdrop-blur-sm shadow-inner w-fit px-4 py-2 rounded-full border border-white/5 group-hover:bg-white/20 transition-colors">
                 {{ __('reports.profit_source') }}
@@ -138,7 +138,7 @@
                         <div class="h-full bg-{{ $color }}-500 rounded-full" style="width: {{ $pct }}%"></div>
                     </div>
                 </div>
-                <span class="text-sm font-black text-gray-900 shrink-0">${{ number_format($device->total_revenue, 2) }}</span>
+                <span class="text-sm font-black text-gray-900 shrink-0">{{ __('messages.currency_symbol') }} {{ number_format($device->total_revenue, 2) }}</span>
             </div>
             @empty
             <div class="py-10 text-center text-gray-400 text-sm font-medium">No device data yet for this period.</div>
@@ -193,7 +193,7 @@
             data: {
                 labels: {!! json_encode($revenueChartData['labels'] ?? []) !!},
                 datasets: [{
-                    label: "{{ __('reports.chart_revenue') }} ($)",
+                    label: "{{ __('reports.chart_revenue') }} ({{ __('messages.currency_symbol') }})",
                     data: {!! json_encode($revenueChartData['values'] ?? []) !!},
                     borderColor: '#0ea5e9', // text-sky-500
                     backgroundColor: gradientFill,
@@ -224,7 +224,7 @@
                         cornerRadius: 12,
                         callbacks: {
                             label: function(context) {
-                                return '$' + context.parsed.y.toFixed(2);
+                                return '{{ __('messages.currency_symbol') }}' + context.parsed.y.toFixed(2);
                             }
                         }
                     }
@@ -233,7 +233,7 @@
                     y: { 
                         beginAtZero: true, 
                         grid: { color: '#f3f4f6', strokeDash: [6, 6], drawBorder: false },
-                        ticks: { font: { weight: 'bold' }, padding: 10, callback: (val) => '$' + val }
+                        ticks: { font: { weight: 'bold' }, padding: 10, callback: (val) => '{{ __('messages.currency_symbol') }}' + val }
                     },
                     x: { 
                         grid: { display: false }, 

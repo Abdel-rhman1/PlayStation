@@ -24,14 +24,19 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
     // Core Dashboard & Analytics
     Route::get('/dashboard', function() {
         $user = auth()->user();
+        $reportingService = app(\App\Domains\Reports\Services\ReportingService::class);
+        
         $recentSessions = \App\Models\Session::with(['device', 'user'])
             ->latest()
             ->limit(6)
             ->get();
         
         $activeDevicesCount = \App\Models\Device::where('status', 'IN_USE')->count();
-        $todayRevenue = \App\Models\Order::whereDate('created_at', today())->sum('total_price');
+        $todayRevenue = \App\Models\Order::whereDate('created_at', today())->sum('total_price') + 
+                        \App\Models\Session::whereDate('created_at', today())->where('status', 'completed')->sum('cost');
+        
         $totalSessionsToday = \App\Models\Session::whereDate('created_at', today())->count();
+        $todayExpenses = \App\Models\Expense::whereDate('date', today())->sum('amount');
 
         // Shift Data
         $currentShift = $user->shifts()->active()->first();
@@ -40,13 +45,17 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
             $shiftRevenue = $currentShift->sessions()->sum('total_price') + $currentShift->orders()->sum('total_price');
         }
 
+        $topDevices = $reportingService->getTopDevices(4);
+
         return view('dashboard', compact(
             'recentSessions', 
             'activeDevicesCount', 
             'todayRevenue', 
             'totalSessionsToday',
+            'todayExpenses',
             'currentShift',
-            'shiftRevenue'
+            'shiftRevenue',
+            'topDevices'
         ));
     })->name('dashboard');
 
