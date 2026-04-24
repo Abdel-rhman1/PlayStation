@@ -8,15 +8,37 @@
             <h2 class="text-2xl font-heading font-bold text-gray-900">{{ __('reports.title') }}</h2>
             <p class="text-gray-500 text-sm">{{ __('reports.subtitle') }}</p>
         </div>
-        <div class="flex items-center gap-3">
-            <button class="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 transition-all">
-                <svg class="w-4 h-4 me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                Apr 23, 2026
-            </button>
-            <a href="{{ route('devices.index') }}" class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-xl text-sm font-semibold text-white shadow-md shadow-primary-100 hover:bg-primary-700 transition-all">
-                <svg class="w-4 h-4 me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                New Session
-            </a>
+        
+        <div class="flex items-center gap-4">
+            @if($currentShift)
+                <div class="hidden lg:flex items-center gap-3 bg-primary-50 px-4 py-2 rounded-2xl border border-primary-100 shadow-sm">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-black text-primary-600 uppercase tracking-widest leading-none">{{ __('dashboard.shift_revenue') }}</span>
+                        <span class="text-sm font-black text-primary-900">${{ number_format($shiftRevenue, 2) }}</span>
+                    </div>
+                    <div class="w-px h-6 bg-primary-200"></div>
+                    <a href="{{ route('shifts.active') }}" class="flex items-center gap-2 group">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="text-xs font-bold text-gray-700 group-hover:text-primary-600 transition-colors">{{ __('dashboard.shift_active') }}</span>
+                    </a>
+                </div>
+            @else
+                <a href="{{ route('shifts.start') }}" class="hidden lg:flex items-center gap-3 bg-amber-50 px-4 py-2 rounded-2xl border border-amber-100 shadow-sm group hover:bg-amber-100 transition-all">
+                    <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+                    <span class="text-xs font-bold text-amber-800">{{ __('dashboard.shift_closed') }}</span>
+                </a>
+            @endif
+
+            <div class="flex items-center gap-3">
+                <button class="inline-flex items-center px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50 transition-all">
+                    <svg class="w-4 h-4 me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    {{ now()->format('M d, Y') }}
+                </button>
+                <a href="{{ route('devices.index') }}" class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-xl text-sm font-semibold text-white shadow-md shadow-primary-100 hover:bg-primary-700 transition-all">
+                    <svg class="w-4 h-4 me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    {{ __('dashboard.new_session') }}
+                </a>
+            </div>
         </div>
     </div>
 
@@ -67,7 +89,7 @@
         <div class="lg:col-span-2 space-y-4">
             <div class="flex items-center justify-between px-2">
                 <h3 class="text-xl font-heading font-bold text-gray-900">{{ __('sessions.title') }}</h3>
-                <button class="text-sm font-bold text-primary-600 hover:underline">{{ __('reports.recent_orders') }}</button>
+                <button class="text-sm font-bold text-primary-600 hover:underline">{{ __('dashboard.recent_orders') }}</button>
             </div>
             <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
                 <table class="w-full text-left">
@@ -87,21 +109,21 @@
                                         {{ substr($session->user->name ?? '?', 0, 1) }}
                                     </div>
                                     <div>
-                                        <p class="font-bold text-gray-900 group-hover:text-primary-600 transition-colors">{{ $session->user->name ?? 'Guest' }}</p>
-                                        <p class="text-xs text-gray-400">{{ $session->device->name ?? 'Unknown Device' }}</p>
+                                        <p class="font-bold text-gray-900 group-hover:text-primary-600 transition-colors">{{ $session->user->name ?? __('dashboard.guest') }}</p>
+                                        <p class="text-xs text-gray-400">{{ $session->device->name ?? __('dashboard.unknown_device') }}</p>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-5">
                                 <span class="px-3 py-1 rounded-full {{ $session->end_time ? 'bg-gray-100 text-gray-700' : 'bg-green-50 text-green-700' }} text-xs font-black uppercase tracking-tighter">
-                                    {{ $session->end_time ? $session->duration . ' mins' : 'Active' }}
+                                    {{ $session->end_time ? $session->duration . ' mins' : __('dashboard.active') }}
                                 </span>
                             </td>
                             <td class="px-6 py-5 text-end font-black text-gray-900">${{ number_format($session->total_price, 2) }}</td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="3" class="px-6 py-10 text-center text-gray-400 italic">No recent sessions found.</td>
+                            <td colspan="3" class="px-6 py-10 text-center text-gray-400 italic">{{ __('dashboard.no_recent_sessions') }}</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -113,7 +135,7 @@
         <div class="space-y-4">
             <div class="flex items-center justify-between px-2">
                 <h3 class="text-xl font-heading font-bold text-gray-900">{{ __('reports.top_devices') }}</h3>
-                <span class="text-xs font-bold text-gray-400 uppercase">Revenue</span>
+                <span class="text-xs font-bold text-gray-400 uppercase">{{ __('dashboard.revenue') }}</span>
             </div>
             <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 space-y-6">
                 @php
@@ -139,14 +161,14 @@
                              style="width: {{ $device['usage'] }}%"></div>
                     </div>
                     <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                        <span>Utilization</span>
+                        <span>{{ __('dashboard.utilization') }}</span>
                         <span>{{ $device['usage'] }}%</span>
                     </div>
                 </div>
                 @endforeach
 
                 <button class="w-full mt-4 py-4 rounded-2xl bg-gray-50 text-sm font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-all border border-transparent hover:border-gray-200">
-                    Detailed Analytics
+                    {{ __('dashboard.detailed_analytics') }}
                 </button>
             </div>
         </div>

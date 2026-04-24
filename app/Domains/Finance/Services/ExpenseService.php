@@ -32,8 +32,9 @@ class ExpenseService
     /**
      * Create a new expense.
      */
-    public function createExpense(array $data): Expense
+    public function createExpense(int $userId, array $data): Expense
     {
+        $data['user_id'] = $userId;
         return Expense::create($data);
     }
 }

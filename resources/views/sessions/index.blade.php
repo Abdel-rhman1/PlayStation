@@ -14,16 +14,16 @@
                 <div class="flex items-center gap-2 w-full sm:w-auto">
                     <input type="date" name="from" value="{{ request('from') }}" 
                            class="bg-gray-50 border-gray-100 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary-500">
-                    <span class="text-gray-400 text-xs font-bold uppercase tracking-widest">To</span>
+                    <span class="text-gray-400 text-xs font-bold uppercase tracking-widest">{{ __('sessions.to') }}</span>
                     <input type="date" name="to" value="{{ request('to') }}" 
                            class="bg-gray-50 border-gray-100 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary-500">
                 </div>
                 
                 <button type="submit" class="bg-primary-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-primary-700 transition-all w-full sm:w-auto">
-                    Filter Logs
+                    {{ __('sessions.filter_logs') }}
                 </button>
                 @if(request()->hasAny(['from', 'to']))
-                    <a href="{{ url()->current() }}" class="text-gray-400 hover:text-gray-600 text-xs font-bold uppercase">Clear</a>
+                    <a href="{{ url()->current() }}" class="text-gray-400 hover:text-gray-600 text-xs font-bold uppercase">{{ __('sessions.clear') }}</a>
                 @endif
             </form>
         </div>
@@ -51,7 +51,7 @@
                                 </div>
                                 <div>
                                     <p class="font-bold text-gray-900 leading-none">{{ $session->device->name }}</p>
-                                    <p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mt-1">ID: {{ $session->id }}</p>
+                                    <p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mt-1">{{ __('sessions.id') }} {{ $session->id }}</p>
                                 </div>
                             </div>
                         </td>

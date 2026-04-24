@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Device extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes, \App\Core\Tenancy\Traits\HasTenant;
+    use HasFactory, HasUuids, SoftDeletes, \App\Core\Tenancy\Traits\HasTenant, \App\Core\Traits\LogsActivity, \App\Core\Traits\HasBranchAccess;
 
     protected $fillable = [
         'tenant_id',

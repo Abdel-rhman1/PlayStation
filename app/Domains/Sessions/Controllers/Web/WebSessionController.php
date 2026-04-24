@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Domains\Sessions\Exceptions\DeviceNotAvailableException;
 use App\Domains\Sessions\Exceptions\DeviceNotActiveException;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use App\Models\Session;
 
 class WebSessionController extends Controller
 {
@@ -51,8 +52,10 @@ class WebSessionController extends Controller
     public function stop(Device $device, Request $request): RedirectResponse
     {
         try {
-            $this->sessionService->stopSession($device, auth()->id());
-            return back()->with('success', __('notifications.session_stopped'));
+            $session = $this->sessionService->stopSession($device, auth()->id());
+            
+            return redirect()->route('sessions.receipt', $session->id)
+                ->with('success', __('notifications.session_stopped'));
         } catch (DeviceNotActiveException $e) {
             return back()->with('error', $e->getMessage());
         } catch (BadRequestException $e) {
@@ -60,5 +63,14 @@ class WebSessionController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Failed to stop session: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Show the receipt for a specific session.
+     */
+    public function receipt(Session $session, \App\Services\Sessions\SessionBillingService $billingService)
+    {
+        $data = $billingService->generateReceiptData($session);
+        return view('receipts.session', compact('data'));
     }
 }

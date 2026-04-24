@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Expense extends Model
 {
-    use HasFactory, \App\Core\Tenancy\Traits\HasTenant;
+    use HasFactory, \App\Core\Tenancy\Traits\HasTenant, \App\Core\Traits\LogsActivity, \App\Core\Traits\HasShift;
 
-    protected $fillable = ['tenant_id', 'amount', 'type', 'description', 'date'];
+    protected $fillable = ['tenant_id', 'user_id', 'shift_id', 'amount', 'type', 'description', 'date'];
 
     protected function casts(): array
     {

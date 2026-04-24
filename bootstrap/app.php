@@ -21,6 +21,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'identify-tenant' => \App\Http\Middleware\IdentifyTenant::class,
             'subscribed' => \App\Http\Middleware\VerifySubscription::class,
             'limit.devices' => \App\Http\Middleware\EnforceDeviceLimit::class,
+            'permission' => \App\Http\Middleware\PermissionMiddleware::class,
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'shift-active' => \App\Http\Middleware\EnsureShiftIsActive::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

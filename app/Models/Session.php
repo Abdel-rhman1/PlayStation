@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Session extends Model
 {
-    use HasFactory, HasUuids, SoftDeletes, \App\Core\Tenancy\Traits\HasTenant;
+    use HasFactory, HasUuids, SoftDeletes, \App\Core\Tenancy\Traits\HasTenant, \App\Core\Traits\LogsActivity, \App\Core\Traits\HasShift;
 
     protected $fillable = [
         'tenant_id',
@@ -22,6 +22,7 @@ class Session extends Model
         'cost',
         'pricing_type',
         'status',
+        'shift_id',
     ];
 
     protected function casts(): array
@@ -42,5 +43,10 @@ class Session extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 }

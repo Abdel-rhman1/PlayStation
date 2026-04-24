@@ -4,18 +4,36 @@ namespace App\Domains\POS\Services;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Device;
 use Illuminate\Support\Facades\DB;
 
 class POSService
 {
     /**
-     * Create a new order with multiple items.
+     * Create a new order with multiple items and link to an active session.
      */
-    public function createOrder(int $userId, array $items): Order
+    public function createOrder(int $userId, array $items, ?string $deviceId = null): Order
     {
-        return DB::transaction(function () use ($userId, $items) {
+        if (!$deviceId) {
+            throw new \Exception("A device must be selected to create an order.");
+        }
+
+        $device = Device::findOrFail($deviceId);
+        $activeSession = $device->activeSession;
+
+        if (!$activeSession) {
+            throw new \Exception("The selected device does not have an active session.");
+        }
+
+        $sessionId = $activeSession->id;
+
+        $tenantId = $device->tenant_id;
+
+        return DB::transaction(function () use ($userId, $items, $sessionId, $tenantId) {
             $order = Order::create([
+                'tenant_id' => $tenantId,
                 'user_id' => $userId,
+                'session_id' => $sessionId,
                 'status' => 'pending',
                 'total_price' => 0,
             ]);

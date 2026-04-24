@@ -13,9 +13,10 @@ use Illuminate\Support\Facades\DB;
 
 class StopSessionService
 {
-    public function __construct(protected DeviceControlService $deviceControlService)
-    {
-    }
+    public function __construct(
+        protected DeviceControlService $deviceControlService,
+        protected SessionBillingService $billingService
+    ) {}
 
     /**
      * @param Device $device
@@ -50,22 +51,16 @@ class StopSessionService
             }
 
             $endedAt = now();
-            
-            // Calculate duration in hours
-            $durationInMinutes = $session->started_at->diffInMinutes($endedAt);
-            $durationInHours = max($durationInMinutes / 60, 0); // avoid negative just in case
+            $session->ended_at = $endedAt; // Set temporarily for calculation
 
-            // Calculate cost using device's hourly rate
-            $hourlyRate = $device->hourly_rate ?? 0;
-            $cost = $durationInHours * $hourlyRate;
-
-            // Optional: apply minimum cost or fixed rate if 'pricing_type' logic gets complex later
+            $billing = $this->billingService->calculateTotal($session);
 
             // Update Session
             $session->update([
-                'ended_at' => $endedAt,
-                'cost' => $cost,
-                'status' => 'completed'
+                'ended_at'    => $endedAt,
+                'cost'        => $billing['device_price'],
+                'total_price' => $billing['grand_total'],
+                'status'      => 'completed'
             ]);
 
             // Mark device as OFF (available)

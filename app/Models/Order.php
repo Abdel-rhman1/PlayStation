@@ -7,9 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    use HasFactory, \App\Core\Tenancy\Traits\HasTenant;
+    use HasFactory, \App\Core\Tenancy\Traits\HasTenant, \App\Core\Traits\LogsActivity, \App\Core\Traits\HasShift;
 
-    protected $fillable = ['tenant_id', 'user_id', 'total_price', 'status'];
+    protected $fillable = ['tenant_id', 'session_id', 'user_id', 'shift_id', 'total_price', 'status'];
+
+    public function session()
+    {
+        return $this->belongsTo(Session::class);
+    }
 
     public function items()
     {

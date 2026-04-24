@@ -32,7 +32,7 @@
                         <p class="text-2xl font-heading font-black text-white" x-text="activeCount">{{ $activeDevicesCount }}</p>
                     </div>
                     <div class="bg-white/5 border border-white/10 rounded-[2rem] px-6 py-4 backdrop-blur-md">
-                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">{{ __('devices.total') }}</p>
+                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">{{ __('devices.total_devices') }}</p>
                         <p class="text-2xl font-heading font-black text-white" x-text="totalCount">{{ $devices->count() }}</p>
                     </div>
                 </div>
@@ -121,22 +121,22 @@
             <button @click="statusFilter = 'all'" 
                     class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
                     :class="statusFilter === 'all' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-900'">
-                All
+                {{ __('devices.filter_all') }}
             </button>
             <button @click="statusFilter = 'IN_USE'" 
                     class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
                     :class="statusFilter === 'IN_USE' ? 'bg-yellow-400 text-white shadow-lg shadow-yellow-100' : 'text-gray-400 hover:text-gray-900'">
-                In Use
+                {{ __('devices.filter_in_use') }}
             </button>
             <button @click="statusFilter = 'ON'" 
                     class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
                     :class="statusFilter === 'ON' ? 'bg-green-500 text-white shadow-lg shadow-green-100' : 'text-gray-400 hover:text-gray-900'">
-                Available
+                {{ __('devices.filter_available') }}
             </button>
         </div>
 
         <div class="relative w-full md:w-80">
-            <input type="text" x-model="searchQuery" placeholder="Search devices by name or branch..." 
+            <input type="text" x-model="searchQuery" placeholder="{{ __('devices.search_placeholder') }}" 
                    class="w-full bg-white border-transparent rounded-2xl px-6 py-4 shadow-sm focus:ring-2 focus:ring-primary-500 transition-all font-bold text-gray-900 text-sm">
             <svg class="absolute right-6 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </div>
@@ -156,9 +156,9 @@
                 <div class="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg class="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                 </div>
-                <h3 class="text-xl font-heading font-black text-gray-900">No hardware detected</h3>
-                <p class="text-gray-400 mt-2">Start by registering your first device to this branch.</p>
-                <button @click="showCreateModal = true" class="mt-8 px-8 py-4 bg-gray-900 text-white rounded-2xl font-bold shadow-xl hover:bg-black transition-all">Add Device Now</button>
+                <h3 class="text-xl font-heading font-black text-gray-900">{{ __('devices.no_hardware_title') }}</h3>
+                <p class="text-gray-400 mt-2">{{ __('devices.no_hardware_desc') }}</p>
+                <button @click="showCreateModal = true" class="mt-8 px-8 py-4 bg-gray-900 text-white rounded-2xl font-bold shadow-xl hover:bg-black transition-all">{{ __('devices.btn_add_now') }}</button>
             </div>
         @endforelse
     </div>

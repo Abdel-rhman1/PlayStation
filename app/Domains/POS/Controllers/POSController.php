@@ -4,6 +4,7 @@ namespace App\Domains\POS\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Device;
 use App\Domains\POS\Services\POSService;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,8 @@ class POSController extends Controller
     public function index()
     {
         $products = Product::with('category')->get();
-        return view('pos.index', compact('products'));
+        $devices = Device::where('status', 'IN_USE')->get();
+        return view('pos.index', compact('products', 'devices'));
     }
 
     public function store(Request $request)
@@ -34,7 +36,11 @@ class POSController extends Controller
                 'quantity' => $item['qty']
             ], $cart);
 
-            $this->posService->createOrder(auth()->id(), $items);
+            $this->posService->createOrder(
+                auth()->id(), 
+                $items, 
+                $request->input('device_id')
+            );
 
             return back()->with('success', 'Order created successfully.');
         } catch (\Exception $e) {

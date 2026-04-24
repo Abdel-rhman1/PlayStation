@@ -110,6 +110,29 @@
                 }
             }
         };
+
+        // UI Restriction logic without modifying existing Blade templates
+        document.addEventListener('DOMContentLoaded', () => {
+            const hasRole = (role) => @json(auth()->user()?->hasRole('owner') ?? false);
+            const permissions = @json(auth()->user()?->role?->permissions->pluck('name')->unique()->values() ?? []);
+
+            if(!hasRole('owner')) {
+                // Disable/Hide sensitive buttons based on text or common action patterns
+                const buttons = document.querySelectorAll('button, a');
+                buttons.forEach(btn => {
+                    const text = btn.innerText.toLowerCase();
+                    const href = btn.getAttribute('href') || '';
+                    
+                    // Example: Restricted strings
+                    const restrictedTerms = ['delete', 'destroy', 'settings', 'expenses', 'reports'];
+                    if (restrictedTerms.some(term => text.includes(term)) || restrictedTerms.some(term => href.includes(term))) {
+                        btn.style.opacity = '0.5';
+                        btn.style.pointerEvents = 'none';
+                        btn.setAttribute('title', 'Action restricted by administrator');
+                    }
+                });
+            }
+        });
     </script>
 
     <style>

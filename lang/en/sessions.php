@@ -12,4 +12,8 @@ return [
     'cost' => 'Total Cost',
     'elapsed' => 'Elapsed Time',
     'no_sessions' => 'No sessions found in history.',
+    'to' => 'To',
+    'filter_logs' => 'Filter Logs',
+    'clear' => 'Clear',
+    'id' => 'ID:',
 ];

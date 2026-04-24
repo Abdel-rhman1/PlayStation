@@ -11,6 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
+    use \App\Core\Auth\Traits\HasPermissions;
     use HasApiTokens, HasFactory, Notifiable, \App\Core\Tenancy\Traits\HasTenant;
 
     protected $fillable = [
@@ -31,5 +32,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
         ];
+    }
+
+    public function shifts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Shift::class);
     }
 }

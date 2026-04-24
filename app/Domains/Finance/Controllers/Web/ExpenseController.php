@@ -47,7 +47,7 @@ class ExpenseController extends Controller
             'date' => 'required|date',
         ]);
 
-        $this->expenseService->createExpense($data);
+        $this->expenseService->createExpense(auth()->id(), $data);
 
         return redirect()->route('expenses.index')->with('success', __('notifications.expense_created'));
     }

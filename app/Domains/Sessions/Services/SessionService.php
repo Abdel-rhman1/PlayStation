@@ -8,6 +8,8 @@ use App\Enums\DeviceStatus;
 use App\Models\Device;
 use App\Models\DeviceLog;
 use App\Models\Session;
+use App\Models\Receipt;
+use App\Services\Sessions\SessionBillingService;
 use App\Services\IoT\DeviceControlService;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -15,7 +17,8 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 class SessionService
 {
     public function __construct(
-        protected DeviceControlService $deviceControlService
+        protected DeviceControlService $deviceControlService,
+        protected SessionBillingService $billingService
     ) {}
 
     /**
@@ -45,7 +48,9 @@ class SessionService
             $device->update(['status' => DeviceStatus::IN_USE]);
 
             $session = Session::create([
+                'tenant_id' => $device->tenant_id,
                 'device_id' => $device->id,
+                'user_id' => $userId,
                 'started_at' => now(),
                 'status' => 'active',
                 'pricing_type' => 'per_hour',
@@ -86,15 +91,24 @@ class SessionService
             $this->deviceControlService->turnOff($device);
 
             $endedAt = now();
-            $durationInHours = $session->started_at->diffInHours($endedAt) + ($session->started_at->diffInMinutes($endedAt) % 60) / 60;
-            
-            $hourlyRate = $device->hourly_rate ?? 0;
-            $cost = round($durationInHours * $hourlyRate, 2);
+            $session->ended_at = $endedAt; // Temp set for calc
 
+            $billing = $this->billingService->calculateTotal($session);
+            
             $session->update([
-                'ended_at' => $endedAt,
-                'cost' => $cost,
-                'status' => 'completed',
+                'ended_at'    => $endedAt,
+                'cost'        => $billing['device_price'],
+                'total_price' => $billing['grand_total'],
+                'status'      => 'completed',
+            ]);
+
+            // Store Receipt Snapshot
+            Receipt::create([
+                'session_id'   => $session->id,
+                'device_price' => $billing['device_price'],
+                'orders_total' => $billing['orders_total'],
+                'grand_total'  => $billing['grand_total'],
+                'snapshot'     => $this->billingService->generateReceiptData($session),
             ]);
 
             $device->update(['status' => DeviceStatus::OFF]);
