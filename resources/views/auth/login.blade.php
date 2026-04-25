@@ -7,12 +7,12 @@
 
             <!-- Email Address -->
             <div>
-                <x-input-label for="email" :value="__('Email Address')" />
+                <x-input-label for="email" :value="__('auth.email')" />
                 <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
+                    <div class="absolute inset-y-0 start-0 ps-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" /></svg>
                     </div>
-                    <x-text-input id="email" class="pl-11" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                    <x-text-input id="email" class="ps-11" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="admin@example.com" />
                 </div>
                 <x-input-error :messages="$errors->get('email')" class="mt-2 text-rose-500 text-xs font-bold" />
             </div>
@@ -20,18 +20,18 @@
             <!-- Password -->
             <div>
                 <div class="flex items-center justify-between">
-                    <x-input-label for="password" :value="__('Password')" />
+                    <x-input-label for="password" :value="__('auth.password')" />
                     @if (Route::has('password.request'))
                         <a class="text-[10px] font-black text-primary-500/60 hover:text-primary-400 uppercase tracking-widest transition-colors mb-2" href="{{ route('password.request') }}">
-                            {{ __('Forgot?') }}
+                            {{ __('auth.forgot_password') }}
                         </a>
                     @endif
                 </div>
                 <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
+                    <div class="absolute inset-y-0 start-0 ps-4 flex items-center pointer-events-none text-white/20 group-focus-within:text-primary-500 transition-colors">
                         <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                     </div>
-                    <x-text-input id="password" class="pl-11" type="password" name="password" required autocomplete="current-password" />
+                    <x-text-input id="password" class="ps-11" type="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
                 </div>
                 <x-input-error :messages="$errors->get('password')" class="mt-2 text-rose-500 text-xs font-bold" />
             </div>
@@ -43,14 +43,16 @@
                     <div class="w-5 h-5 border-2 border-white/10 rounded-lg group-hover:border-primary-500/50 transition-all peer-checked:bg-primary-500 peer-checked:border-primary-500 flex items-center justify-center">
                         <svg class="w-3 h-3 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
                     </div>
-                    <span class="ml-3 text-xs font-bold text-white/40 uppercase tracking-widest group-hover:text-white/60 transition-colors">{{ __('Stay Signed In') }}</span>
+                    <span class="ms-3 text-xs font-bold text-white/40 uppercase tracking-widest group-hover:text-white/60 transition-colors">{{ __('auth.stay_signed_in') }}</span>
                 </label>
             </div>
 
             <div class="pt-2">
                 <x-primary-button>
-                    {{ __('Access Terminal') }}
-                    <svg class="ml-3 w-5 h-5 text-white/70 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    <span class="flex items-center">
+                        {{ __('auth.access_terminal') }}
+                        <svg class="ms-3 w-5 h-5 text-white/70 group-hover:translate-x-1 transition-transform rtl:rotate-180 rtl:group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </span>
                 </x-primary-button>
             </div>
         </form>
@@ -58,8 +60,8 @@
         @if (Route::has('register'))
             <div class="text-center pt-4">
                 <p class="text-white/30 text-xs font-bold tracking-widest uppercase">
-                    {{ __("Don't have an account?") }}
-                    <a href="{{ route('register') }}" class="text-primary-500 hover:text-primary-400 transition-colors ml-1 uppercase">{{ __('Apply for Access') }}</a>
+                    {{ __('auth.no_account') }}
+                    <a href="{{ route('register') }}" class="text-primary-500 hover:text-primary-400 transition-colors ms-1 uppercase">{{ __('auth.apply_access') }}</a>
                 </p>
             </div>
         @endif

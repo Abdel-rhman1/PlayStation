@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'hero_title' => 'Level Up Your Gaming Lounge Management',
+    'hero_subtitle' => 'The most advanced SaaS platform for PlayStation shops. Manage sessions, track inventory, and scale your gaming empire with real-time analytics.',
+    'start_free_trial' => 'Start Your 14-Day Free Trial',
+    'view_pricing' => 'View Pricing',
+    'pricing_title' => 'Simple, Transparent Pricing',
+    'pricing_subtitle' => 'Choose the perfect plan for your gaming lounge growth.',
+    'starter' => 'Starter',
+    'pro' => 'Pro',
+    'enterprise' => 'Enterprise',
+    'device_limit' => 'Up to :limit Devices',
+    'sessions_logs' => 'Unlimited Sessions & Logs',
+    'pos_inventory' => 'Real-time POS Inventory',
+    'reports' => 'Financial Reports',
+    'select_plan' => 'Select Plan',
+    'recommended' => 'Recommended',
+    'perfect_for_growing' => 'Perfect for growing lounges.',
+    'month' => 'Month',
+    'login' => 'Log In',
+    'get_started' => 'Get Started',
+    'footer_copy' => '&copy; :year :name. Built for gamers by gamers.',
+    'privacy' => 'Privacy',
+    'terms' => 'Terms',
+    'support' => 'Support',
+];

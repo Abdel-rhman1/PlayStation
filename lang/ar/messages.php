@@ -25,4 +25,8 @@ return [
     'operations' => 'العمليات',
     'retail' => 'التجزئة والاستراتيجية',
     'currency_symbol' => 'ج.م',
+    'saas_control' => 'مركز تحكم SaaS',
+    'global_dashboard' => 'لوحة التحكم العالمية',
+    'all_tenancies' => 'جميع المستأجرين',
+    'pricing_plans' => 'خطط الأسعار',
 ];

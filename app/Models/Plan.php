@@ -9,7 +9,7 @@ class Plan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'device_limit', 'price', 'billing_cycle_days'];
+    protected $fillable = ['name', 'description', 'device_limit', 'price', 'billing_cycle_days'];
 
     public function tenants()
     {

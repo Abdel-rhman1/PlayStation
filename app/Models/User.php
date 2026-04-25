@@ -38,4 +38,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Shift::class);
     }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->tenant_id === null;
+    }
 }

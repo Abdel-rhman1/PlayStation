@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(SuperAdminSeeder::class);
+
         // 1. Create SaaS Plans
         $plans = [
              Plan::factory()->create(['name' => 'Starter', 'price' => 29.99, 'device_limit' => 5]),

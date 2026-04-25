@@ -25,4 +25,8 @@ return [
     'operations' => 'Operations',
     'retail' => 'Retail & Strategy',
     'currency_symbol' => 'EGP',
+    'saas_control' => 'SaaS Control Center',
+    'global_dashboard' => 'Global Dashboard',
+    'all_tenancies' => 'All Tenancies',
+    'pricing_plans' => 'Pricing Plans',
 ];

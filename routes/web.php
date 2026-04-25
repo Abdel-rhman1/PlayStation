@@ -13,10 +13,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect()->route('dashboard');
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    $plans = \App\Models\Plan::all();
+    return view('welcome', compact('plans'));
 });
 
 // Auth handled by Breeze in routes/auth.php
+
+// Language Switcher (Publicly Accessible)
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'ar'])) {
+        session()->put('locale', $locale);
+    }
+    return back();
+})->name('lang.switch');
 
 // Primary Administrative Shell
 Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
@@ -135,13 +147,7 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
         return view('settings.index');
     })->name('settings.index');
 
-    // Language Switcher
-    Route::get('lang/{locale}', function ($locale) {
-        if (in_array($locale, ['en', 'ar'])) {
-            session()->put('locale', $locale);
-        }
-        return back();
-    })->name('lang.switch');
+
 
     // User & Role Management (Owner Only)
     Route::middleware('role:owner')->group(function() {
@@ -149,6 +155,37 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
         Route::get('roles', [\App\Http\Controllers\RoleController::class, 'index'])->name('roles.index');
         Route::post('roles', [\App\Http\Controllers\RoleController::class, 'store'])->name('roles.store');
         Route::put('roles/{role}', [\App\Http\Controllers\RoleController::class, 'update'])->name('roles.update');
+    });
+
+    // Super Admin System Management
+    Route::group(['middleware' => 'super-admin', 'prefix' => 'admin', 'as' => 'admin.'], function() {
+        Route::get('/', [\App\Http\Controllers\Admin\SuperAdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/tenants', [\App\Http\Controllers\Admin\SuperAdminController::class, 'tenants'])->name('tenants');
+        Route::get('/tenants/create', [\App\Http\Controllers\Admin\SuperAdminController::class, 'createTenant'])->name('tenants.create');
+        Route::post('/tenants', [\App\Http\Controllers\Admin\SuperAdminController::class, 'storeTenant'])->name('tenants.store');
+        Route::get('/tenants/{tenant}/edit', [\App\Http\Controllers\Admin\SuperAdminController::class, 'editTenant'])->name('tenants.edit');
+        Route::put('/tenants/{tenant}', [\App\Http\Controllers\Admin\SuperAdminController::class, 'updateTenant'])->name('tenants.update');
+        Route::post('/tenants/{tenant}/toggle', [\App\Http\Controllers\Admin\SuperAdminController::class, 'toggleTenantStatus'])->name('tenants.toggle');
+        Route::delete('/tenants/{tenant}', [\App\Http\Controllers\Admin\SuperAdminController::class, 'deleteTenant'])->name('tenants.delete');
+        Route::get('/plans', [\App\Http\Controllers\Admin\SuperAdminController::class, 'plans'])->name('plans');
+        Route::get('/plans/create', [\App\Http\Controllers\Admin\SuperAdminController::class, 'createPlan'])->name('plans.create');
+        Route::post('/plans', [\App\Http\Controllers\Admin\SuperAdminController::class, 'storePlan'])->name('plans.store');
+        Route::get('/plans/{plan}/edit', [\App\Http\Controllers\Admin\SuperAdminController::class, 'editPlan'])->name('plans.edit');
+        Route::put('/plans/{plan}', [\App\Http\Controllers\Admin\SuperAdminController::class, 'updatePlan'])->name('plans.update');
+        Route::delete('/plans/{plan}', [\App\Http\Controllers\Admin\SuperAdminController::class, 'deletePlan'])->name('plans.delete');
+        Route::get('/users', [\App\Http\Controllers\Admin\SuperAdminController::class, 'users'])->name('users');
+        Route::get('/users/create', [\App\Http\Controllers\Admin\SuperAdminController::class, 'createUser'])->name('users.create');
+        Route::post('/users', [\App\Http\Controllers\Admin\SuperAdminController::class, 'storeUser'])->name('users.store');
+        Route::get('/users/{user}/edit', [\App\Http\Controllers\Admin\SuperAdminController::class, 'editUser'])->name('users.edit');
+        Route::put('/users/{user}', [\App\Http\Controllers\Admin\SuperAdminController::class, 'updateUser'])->name('users.update');
+        Route::delete('/users/{user}', [\App\Http\Controllers\Admin\SuperAdminController::class, 'deleteUser'])->name('users.delete');
+        Route::get('/roles', [\App\Http\Controllers\Admin\SuperAdminController::class, 'roles'])->name('roles');
+        Route::get('/roles/create', [\App\Http\Controllers\Admin\SuperAdminController::class, 'createRole'])->name('roles.create');
+        Route::post('/roles', [\App\Http\Controllers\Admin\SuperAdminController::class, 'storeRole'])->name('roles.store');
+        Route::get('/roles/{role}/edit', [\App\Http\Controllers\Admin\SuperAdminController::class, 'editRole'])->name('roles.edit');
+        Route::put('/roles/{role}', [\App\Http\Controllers\Admin\SuperAdminController::class, 'updateRole'])->name('roles.update');
+        Route::delete('/roles/{role}', [\App\Http\Controllers\Admin\SuperAdminController::class, 'deleteRole'])->name('roles.delete');
+        Route::get('/reports', [\App\Http\Controllers\Admin\SuperAdminController::class, 'reports'])->name('reports');
     });
 
 });

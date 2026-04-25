@@ -42,6 +42,7 @@
             @php $user = auth()->user(); @endphp
 
             {{-- Operations (all roles) --}}
+            @if(!$user->isSuperAdmin())
             <div class="space-y-3">
                 <h3 class="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{{ __('messages.operations') }}</h3>
                 <div class="space-y-1">
@@ -68,8 +69,10 @@
                     @endforeach
                 </div>
             </div>
+            @endif
 
             {{-- Retail & Strategy (all roles) --}}
+            @if(!$user->isSuperAdmin())
             <div class="space-y-3">
                 <h3 class="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{{ __('messages.retail') }}</h3>
                 <div class="space-y-1">
@@ -95,9 +98,10 @@
                     @endforeach
                 </div>
             </div>
+            @endif
 
             {{-- Administration (Owner only) --}}
-            @if($user->isOwner())
+            @if(!$user->isSuperAdmin() && $user->isOwner())
             <div class="space-y-3">
                 <h3 class="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Administration</h3>
                 <div class="space-y-1">
@@ -127,7 +131,65 @@
             @endif
 
 
+            {{-- Super Admin Management --}}
+            @if($user->isSuperAdmin())
+            <div class="space-y-6 pt-4 text-start">
+                {{-- Platform Section --}}
+                <div class="space-y-3">
+                    <h3 class="px-4 text-[10px] font-black text-primary-600 uppercase tracking-[0.2em]">{{ __('messages.saas_control') }}</h3>
+                    <div class="space-y-1">
+                        @php
+                            $platform = [
+                                ['name' => __('messages.global_dashboard'), 'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', 'route' => route('admin.dashboard')],
+                                ['name' => __('messages.all_tenancies'), 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4', 'route' => route('admin.tenants')],
+                                ['name' => __('messages.pricing_plans'), 'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z', 'route' => route('admin.plans')],
+                            ];
+                        @endphp
+                        @foreach($platform as $item)
+                            @php $isActive = Request::url() == $item['route'] || Str::startsWith(Request::url(), $item['route'] . '/'); @endphp
+                            <a href="{{ $item['route'] }}"
+                               class="group flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-200 {{ $isActive ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' : 'text-gray-500 hover:bg-gray-50 hover:text-primary-600' }}">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center me-3 transition-colors {{ $isActive ? 'bg-white/20' : 'bg-gray-100 group-hover:bg-primary-50' }}">
+                                    <svg class="h-4 w-4 {{ $isActive ? 'text-white' : 'text-gray-400 group-hover:text-primary-600' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $item['icon'] }}" />
+                                    </svg>
+                                </div>
+                                {{ $item['name'] }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                {{-- Admin Section --}}
+                <div class="space-y-3">
+                    <h3 class="px-4 text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{{ __('Administration') }}</h3>
+                    <div class="space-y-1">
+                        @php
+                            $management = [
+                                ['name' => __('admin.manage_users'), 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z', 'route' => route('admin.users')],
+                                ['name' => __('admin.manage_roles'), 'icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4', 'route' => route('admin.roles')],
+                                ['name' => __('admin.system_report'), 'icon' => 'M9 17v-2a2 2 0 00-2-2H5a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2zm0-5V7a2 2 0 012-2h2a2 2 0 012 2v5a2 2 0 01-2 2h-2a2 2 0 01-2-2z', 'route' => route('admin.reports')],
+                            ];
+                        @endphp
+                        @foreach($management as $item)
+                            @php $isActive = Request::url() == $item['route'] || Str::startsWith(Request::url(), $item['route'] . '/'); @endphp
+                            <a href="{{ $item['route'] }}"
+                               class="group flex items-center px-4 py-3 text-sm font-bold rounded-2xl transition-all duration-200 {{ $isActive ? 'bg-primary-600 text-white shadow-lg shadow-primary-200' : 'text-gray-500 hover:bg-gray-50 hover:text-primary-600' }}">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center me-3 transition-colors {{ $isActive ? 'bg-white/20' : 'bg-gray-100 group-hover:bg-primary-50' }}">
+                                    <svg class="h-4 w-4 {{ $isActive ? 'text-white' : 'text-gray-400 group-hover:text-primary-600' }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $item['icon'] }}" />
+                                    </svg>
+                                </div>
+                                {{ $item['name'] }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+
             <!-- System Group (Separate Bottom) -->
+            @if(!$user->isSuperAdmin())
             <div class="pt-4 border-t border-gray-50">
                 <a href="{{ route('settings.index') }}" 
                    class="group flex items-center px-4 py-3 text-sm font-bold rounded-2xl text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all">
@@ -139,6 +201,7 @@
                     {{ __('messages.settings') }}
                 </a>
             </div>
+            @endif
         </nav>
 
         <!-- Profile Brief Section -->
