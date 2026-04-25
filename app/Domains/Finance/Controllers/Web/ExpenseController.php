@@ -22,27 +22,25 @@ class ExpenseController extends Controller
     public function index(Request $request): View
     {
         $filters = $request->validate([
-            'type' => ['nullable', new Enum(ExpenseType::class)],
+            'expense_category_id' => 'nullable|exists:expense_categories,id',
             'from_date' => 'nullable|date',
             'to_date' => 'nullable|date',
         ]);
 
         $expenses = $this->expenseService->listExpenses($filters);
+        $categories = \App\Models\ExpenseCategory::all();
 
         return view('expenses.index', [
             'expenses' => $expenses,
-            'types' => ExpenseType::cases(),
+            'categories' => $categories,
         ]);
     }
 
-    /**
-     * Store a newly created expense.
-     */
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
             'amount' => 'required|numeric|min:0.01',
-            'type' => ['required', new Enum(ExpenseType::class)],
+            'expense_category_id' => 'required|exists:expense_categories,id',
             'description' => 'nullable|string|max:255',
             'date' => 'required|date',
         ]);
@@ -50,5 +48,26 @@ class ExpenseController extends Controller
         $this->expenseService->createExpense(auth()->id(), $data);
 
         return redirect()->route('expenses.index')->with('success', __('notifications.expense_created'));
+    }
+
+    public function update(Request $request, \App\Models\Expense $expense): RedirectResponse
+    {
+        $data = $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'expense_category_id' => 'required|exists:expense_categories,id',
+            'description' => 'nullable|string|max:255',
+            'date' => 'required|date',
+        ]);
+
+        $expense->update($data);
+
+        return redirect()->route('expenses.index')->with('success', __('notifications.expense_updated'));
+    }
+
+    public function destroy(\App\Models\Expense $expense): RedirectResponse
+    {
+        $this->expenseService->deleteExpense($expense);
+
+        return redirect()->route('expenses.index')->with('success', __('notifications.expense_deleted'));
     }
 }

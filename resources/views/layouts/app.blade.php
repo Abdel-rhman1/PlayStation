@@ -143,6 +143,35 @@
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
+
+        @media print {
+            aside, 
+            header, 
+            footer, 
+            .no-print,
+            .fixed,
+            .sticky {
+                display: none !important;
+            }
+            .lg\:ps-72 {
+                padding-inline-start: 0 !important;
+            }
+            body, .bg-gray-50 {
+                background-color: white !important;
+            }
+            main {
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+            }
+            .max-w-7xl {
+                max-width: none !important;
+                width: 100% !important;
+            }
+            /* Reset absolute margins that might be added by browser */
+            @page {
+                margin: 0.5cm;
+            }
+        }
     </style>
 </head>
 <body class="h-full font-sans text-gray-900 antialiased {{ app()->getLocale() == 'ar' ? 'rtl-mode' : 'ltr-mode' }}" 

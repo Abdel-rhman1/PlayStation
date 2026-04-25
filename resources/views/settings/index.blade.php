@@ -39,7 +39,7 @@
         <div x-show="activeTab === 'profile'" x-cloak class="p-10 max-w-2xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div class="flex items-center gap-6 pb-8 border-b border-gray-50">
                 <div class="w-24 h-24 rounded-[2rem] bg-primary-600 flex items-center justify-center text-white text-3xl font-heading font-black shadow-xl shadow-primary-100">
-                    {{ substr(auth()->user()->name ?? 'A', 0, 1) }}
+                    {{ substr($user->name ?? 'A', 0, 1) }}
                 </div>
                 <div>
                     <h3 class="text-xl font-bold text-gray-900">{{ __('settings.account_details') }}</h3>
@@ -47,19 +47,20 @@
                 </div>
             </div>
 
-            <form class="space-y-6">
+            <form action="{{ route('settings.profile.update') }}" method="POST" class="space-y-6">
+                @csrf
                 <div class="grid grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('settings.full_name') }}</label>
-                        <input type="text" class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 font-bold" value="{{ auth()->user()->name ?? 'Administrator' }}">
+                        <input type="text" name="name" class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 font-bold" value="{{ $user->name }}">
                     </div>
                     <div class="space-y-2">
                         <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('settings.email') }}</label>
-                        <input type="email" class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 font-bold" value="{{ auth()->user()->email ?? 'admin@shop.com' }}">
+                        <input type="email" name="email" class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 font-bold" value="{{ $user->email }}">
                     </div>
                 </div>
                 <div class="pt-4">
-                    <button class="bg-primary-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-primary-700 transition-all shadow-lg active:scale-95">{{ __('messages.save') }}</button>
+                    <button type="submit" class="bg-primary-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-primary-700 transition-all shadow-lg active:scale-95">{{ __('messages.save') }}</button>
                 </div>
             </form>
         </div>
@@ -71,12 +72,22 @@
                 <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
                     <div class="space-y-2">
                         <span class="bg-white/20 text-white text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full">{{ __('settings.plan') }}</span>
-                        <h3 class="text-4xl font-heading font-black">Pro Tier</h3>
-                        <p class="text-primary-100 font-medium">{{ __('settings.renew') }} <span class="font-bold border-b border-primary-200 cursor-help">May 21, 2026</span></p>
+                        <h3 class="text-4xl font-heading font-black">{{ $plan->name ?? 'Standard Plan' }}</h3>
+                        <p class="text-primary-100 font-medium">
+                            {{ __('settings.renew') }} 
+                            <span class="font-bold border-b border-primary-200 cursor-help">
+                                {{ $tenant->subscription_ends_at ? $tenant->subscription_ends_at->format('M d, Y') : 'N/A' }}
+                            </span>
+                        </p>
                     </div>
                     <div class="text-end">
-                        <p class="text-5xl font-heading font-black mb-2">{{ __('messages.currency_symbol') }} 99<span class="text-xl opacity-60">/mo</span></p>
-                        <button class="bg-white text-primary-600 px-8 py-3 rounded-xl font-bold hover:bg-gray-50 transition-colors shadow-lg">{{ __('settings.manage_billing') }}</button>
+                        <p class="text-5xl font-heading font-black mb-2">
+                            {{ __('messages.currency_symbol') }} {{ number_format($plan->price ?? 0, 2) }}<span class="text-xl opacity-60">/mo</span>
+                        </p>
+                        <button class="bg-white text-primary-600 px-8 py-3 rounded-xl font-bold hover:bg-gray-50 transition-colors shadow-lg" 
+                                @click="addToast('Billing portal integration coming soon.', 'info')">
+                            {{ __('settings.manage_billing') }}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -109,12 +120,12 @@
                 <div class="space-y-4">
                     <div class="flex justify-between items-end mb-2">
                         <p class="text-sm font-bold text-gray-600">{{ __('settings.consoles_slots') }}</p>
-                        <p class="text-sm font-black text-gray-900">42 <span class="text-gray-400 font-medium">/ 50</span></p>
+                        <p class="text-sm font-black text-gray-900">{{ $deviceCount }} <span class="text-gray-400 font-medium">/ {{ $deviceLimit }}</span></p>
                     </div>
                     <div class="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
-                        <div class="h-full bg-primary-600 w-[84%] transition-all duration-700"></div>
+                        <div class="h-full bg-primary-600 transition-all duration-700" style="width: {{ $usagePercent }}%"></div>
                     </div>
-                    <p class="text-xs text-gray-400">{{ __('settings.quota_usage', ['percent' => 84]) }}</p>
+                    <p class="text-xs text-gray-400">{{ __('settings.quota_usage', ['percent' => round($usagePercent)]) }}</p>
                 </div>
             </div>
         </div>
@@ -144,7 +155,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 @endsection

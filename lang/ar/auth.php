@@ -2,6 +2,8 @@
 
 return [
     'access_terminal' => 'الوصول إلى الوحدة',
+    'admin_access' => 'بوابة المسؤول العام',
+    'admin_secure_access' => 'وصول نظام مقيد',
     'secure_access' => 'نقطة وصول آمنة',
     'stay_signed_in' => 'البقاء متصلاً',
     'already_registered' => 'لديك حساب بالفعل؟',
@@ -13,5 +15,8 @@ return [
     'full_name' => 'الاسم الكامل',
     'sign_in' => 'تسجيل الدخول',
     'forgot_password' => 'نسيت كلمة المرور؟',
-    'create_account' => 'إنشاء حساب',
+    'create_account' => 'إنشاء الحساب',
+    'shop_name' => 'اسم المحل',
+    'shop_subdomain' => 'رابط المحل',
+    'choose_plan' => 'اختر الخطة',
 ];

@@ -37,11 +37,13 @@
                     </div>
                 </div>
 
+                @can('devices.manage')
                 <button @click="showCreateModal = true" 
                         class="h-16 px-8 bg-primary-500 hover:bg-primary-600 rounded-[1.5rem] flex items-center gap-3 font-black text-sm uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-xl shadow-primary-500/20">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/></svg>
                     {{ __('devices.add_device') }}
                 </button>
+                @endcan
             </div>
         </div>
     </div>

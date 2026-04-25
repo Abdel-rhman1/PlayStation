@@ -12,7 +12,7 @@ class SonoffHttpDriver implements DeviceDriverInterface
     protected const PORT = 8081;
     protected const RETRY_ATTEMPTS = 1;
     protected const RETRY_DELAY_MS = 200;
-    protected const TIMEOUT = 2;
+    protected const TIMEOUT = 5;
 
     /**
      * Send hardware ON command to device.

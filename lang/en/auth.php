@@ -2,6 +2,8 @@
 
 return [
     'access_terminal' => 'Access Terminal',
+    'admin_access' => 'Super Admin Portal',
+    'admin_secure_access' => 'Restricted System Access',
     'secure_access' => 'Secure Access Point',
     'stay_signed_in' => 'Stay Signed In',
     'already_registered' => 'Already registered?',
@@ -14,4 +16,7 @@ return [
     'sign_in' => 'Sign In',
     'forgot_password' => 'Forgot?',
     'create_account' => 'Create Account',
+    'shop_name' => 'Shop Name',
+    'shop_subdomain' => 'Shop Subdomain',
+    'choose_plan' => 'Choose Plan',
 ];

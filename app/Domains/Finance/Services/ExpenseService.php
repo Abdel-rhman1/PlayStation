@@ -12,10 +12,10 @@ class ExpenseService
      */
     public function listExpenses(array $filters, int $perPage = 15)
     {
-        $query = Expense::query();
+        $query = Expense::with('category');
         
-        if (isset($filters['type'])) {
-            $query->where('type', $filters['type']);
+        if (isset($filters['expense_category_id'])) {
+            $query->where('expense_category_id', $filters['expense_category_id']);
         }
 
         if (isset($filters['from_date'])) {
@@ -36,5 +36,13 @@ class ExpenseService
     {
         $data['user_id'] = $userId;
         return Expense::create($data);
+    }
+
+    /**
+     * Delete an expense.
+     */
+    public function deleteExpense(Expense $expense): bool
+    {
+        return $expense->delete();
     }
 }

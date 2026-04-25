@@ -24,6 +24,8 @@ return [
     'documentation' => 'Documentation',
     'operations' => 'Operations',
     'retail' => 'Retail & Strategy',
+    'administration' => 'Administration',
+    'name' => 'Name',
     'currency_symbol' => 'EGP',
     'saas_control' => 'SaaS Control Center',
     'global_dashboard' => 'Global Dashboard',

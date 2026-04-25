@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <div class="max-w-4xl mx-auto py-10 space-y-10">
         <div class="flex items-center gap-6">
             <a href="{{ route('admin.users') }}" class="w-12 h-12 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center text-gray-400 hover:text-primary-600 transition-all">
@@ -52,4 +52,4 @@
             </div>
         </form>
     </div>
-</x-app-layout>
+</x-admin-layout>

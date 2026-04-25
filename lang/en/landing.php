@@ -24,4 +24,5 @@ return [
     'privacy' => 'Privacy',
     'terms' => 'Terms',
     'support' => 'Support',
+    'currency_symbol' => 'EGP',
 ];

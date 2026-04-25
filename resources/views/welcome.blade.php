@@ -146,7 +146,8 @@
                     </div>
 
                     <div class="flex items-baseline gap-2 mb-10">
-                        <span class="text-5xl font-black">${{ $plan->price }}</span>
+                        <span class="text-5xl font-black">{{ $plan->price }}</span>
+                        <span class="text-2xl font-bold text-white/60">{{ __('landing.currency_symbol') }}</span>
                         <span class="text-white/30 font-bold uppercase tracking-widest text-xs">/ {{ __('landing.month') }}</span>
                     </div>
 

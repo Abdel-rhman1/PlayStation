@@ -22,4 +22,10 @@ return [
     'added_toast' => 'Added',
     'device_required_toast' => 'Device selection required',
     'process_confirm_toast' => 'Process Final Order?',
+    'categories_title' => 'Product Categories',
+    'categories_subtitle' => 'Manage dynamic categories for your POS products (e.g., Drinks, Snacks).',
+    'add_category' => 'Add New Category',
+    'category_name' => 'Category Name',
+    'back_to_products' => 'Back to Products',
+    'category_delete_confirm' => 'Are you sure you want to delete the category ":name"? This cannot be undone.',
 ];

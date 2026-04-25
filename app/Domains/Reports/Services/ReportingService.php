@@ -46,8 +46,7 @@ class ReportingService
      */
     public function getTopDevices(int $limit = 5): \Illuminate\Support\Collection
     {
-        return DB::table('sessions')
-            ->join('devices', 'sessions.device_id', '=', 'devices.id')
+        return Session::join('devices', 'sessions.device_id', '=', 'devices.id')
             ->select('devices.name', DB::raw('SUM(sessions.cost) as total_revenue'))
             ->where('sessions.status', 'completed')
             ->groupBy('devices.id', 'devices.name')
@@ -61,8 +60,7 @@ class ReportingService
      */
     public function getTopProducts(int $limit = 5): \Illuminate\Support\Collection
     {
-        return DB::table('order_items')
-            ->join('products', 'order_items.product_id', '=', 'products.id')
+        return Product::join('order_items', 'order_items.product_id', '=', 'products.id')
             ->select('products.name', DB::raw('SUM(order_items.quantity) as total_sold'))
             ->groupBy('products.id', 'products.name')
             ->orderByDesc('total_sold')

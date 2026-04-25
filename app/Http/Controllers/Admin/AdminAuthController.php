@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
-class AuthenticatedSessionController extends Controller
+class AdminAuthController extends Controller
 {
     /**
      * Display the login view.
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('admin.auth.login');
     }
 
     /**
@@ -26,13 +27,16 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
-
-        if (Auth::user()->isSuperAdmin()) {
-            return redirect()->route('admin.dashboard');
+        if (!Auth::user()->isSuperAdmin()) {
+            Auth::logout();
+            return redirect()->route('admin.login')->withErrors([
+                'email' => 'Access denied. This portal is for Super Administrators only.',
+            ]);
         }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $request->session()->regenerate();
+
+        return redirect()->intended(route('admin.dashboard'));
     }
 
     /**
@@ -46,6 +50,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('admin.login');
     }
 }

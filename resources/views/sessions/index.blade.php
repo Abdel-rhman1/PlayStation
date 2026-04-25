@@ -10,22 +10,29 @@
                 <p class="text-gray-500 text-sm">{{ __('sessions.subtitle') }}</p>
             </div>
             
-            <form action="{{ url()->current() }}" method="GET" class="flex flex-col sm:flex-row items-center gap-4">
-                <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <input type="date" name="from" value="{{ request('from') }}" 
-                           class="bg-gray-50 border-gray-100 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary-500">
-                    <span class="text-gray-400 text-xs font-bold uppercase tracking-widest">{{ __('sessions.to') }}</span>
-                    <input type="date" name="to" value="{{ request('to') }}" 
-                           class="bg-gray-50 border-gray-100 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary-500">
-                </div>
-                
-                <button type="submit" class="bg-primary-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-primary-700 transition-all w-full sm:w-auto">
-                    {{ __('sessions.filter_logs') }}
+            <div class="flex items-center gap-4">
+                <form action="{{ url()->current() }}" method="GET" class="flex flex-col sm:flex-row items-center gap-4">
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <input type="date" name="from" value="{{ request('from') }}" 
+                               class="bg-gray-50 border-gray-100 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary-500">
+                        <span class="text-gray-400 text-xs font-bold uppercase tracking-widest">{{ __('sessions.to') }}</span>
+                        <input type="date" name="to" value="{{ request('to') }}" 
+                               class="bg-gray-50 border-gray-100 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    
+                    <button type="submit" class="bg-primary-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md hover:bg-primary-700 transition-all w-full sm:w-auto">
+                        {{ __('sessions.filter_logs') }}
+                    </button>
+                    @if(request()->hasAny(['from', 'to']))
+                        <a href="{{ url()->current() }}" class="text-gray-400 hover:text-gray-600 text-xs font-bold uppercase">{{ __('sessions.clear') }}</a>
+                    @endif
+                </form>
+
+                <button onclick="window.print()" class="hidden md:flex items-center gap-2 px-6 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-bold shadow-md hover:bg-black transition-all">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2-2v4h10z" /></svg>
+                    Print Log
                 </button>
-                @if(request()->hasAny(['from', 'to']))
-                    <a href="{{ url()->current() }}" class="text-gray-400 hover:text-gray-600 text-xs font-bold uppercase">{{ __('sessions.clear') }}</a>
-                @endif
-            </form>
+            </div>
         </div>
     </div>
 
@@ -39,6 +46,7 @@
                         <th class="px-8 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('sessions.operator') }}</th>
                         <th class="px-8 py-5 text-xs font-black text-gray-400 uppercase tracking-widest">{{ __('sessions.duration') }}</th>
                         <th class="px-8 py-5 text-xs font-black text-gray-400 uppercase tracking-widest text-end">{{ __('sessions.cost') }}</th>
+                        <th class="px-8 py-5 text-xs font-black text-gray-400 uppercase tracking-widest text-end">{{ __('messages.actions') ?? 'Actions' }}</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -51,7 +59,7 @@
                                 </div>
                                 <div>
                                     <p class="font-bold text-gray-900 leading-none">{{ $session->device->name }}</p>
-                                    <p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mt-1">{{ __('sessions.id') }} {{ $session->id }}</p>
+                                    <p class="text-[10px] text-gray-400 uppercase font-black tracking-widest mt-1">{{ __('sessions.id') }} {{ substr($session->id, 0, 8) }}</p>
                                 </div>
                             </div>
                         </td>
@@ -78,6 +86,13 @@
                             <span class="text-lg font-heading font-black text-gray-900">
                                 {{ __('messages.currency_symbol') }} {{ number_format($session->total_price, 2) }}
                             </span>
+                        </td>
+                        <td class="px-8 py-6 text-right">
+                            <a href="{{ route('sessions.receipt', $session) }}" 
+                               class="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-black transition-all">
+                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                {{ __('messages.view') ?? 'Details' }}
+                            </a>
                         </td>
                     </tr>
                     @empty

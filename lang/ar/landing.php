@@ -24,4 +24,5 @@ return [
     'privacy' => 'الخصوصية',
     'terms' => 'الشروط',
     'support' => 'الدعم',
+    'currency_symbol' => 'ج.م',
 ];

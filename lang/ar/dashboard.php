@@ -13,4 +13,5 @@ return [
     'unknown_device' => 'جهاز غير معروف',
     'active' => 'نشط',
     'no_recent_sessions' => 'لم يتم العثور على جلسات حديثة.',
+    'no_data_available' => 'لا توجد بيانات متاحة بعد.',
 ];

@@ -13,4 +13,5 @@ return [
     'unknown_device' => 'Unknown Device',
     'active' => 'Active',
     'no_recent_sessions' => 'No recent sessions found.',
+    'no_data_available' => 'No data available yet.',
 ];

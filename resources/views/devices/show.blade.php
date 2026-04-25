@@ -23,11 +23,11 @@
             <a href="{{ route('devices.edit', $device) }}" class="px-6 py-3 bg-white border border-gray-100 rounded-2xl text-sm font-bold text-gray-700 hover:bg-gray-50 transition-all shadow-sm">
                 {{ __('devices.edit_settings') }}
             </a>
-            <form action="{{ route('devices.destroy', $device) }}" method="POST" class="inline">
+            <form action="{{ route('devices.destroy', $device) }}" method="POST" class="inline"
+                  @submit.prevent="askConfirm('{{ __('messages.delete') }}', '{{ __('devices.decommission_confirm') }}', () => $el.submit())">
                 @csrf
                 @method('DELETE')
                 <button type="submit" 
-                        onclick="return confirm('{{ __('devices.decommission_confirm') }}')"
                         class="px-6 py-3 bg-red-50 text-red-600 rounded-2xl text-sm font-bold hover:bg-red-100 transition-all">
                     {{ __('devices.decommission') }}
                 </button>

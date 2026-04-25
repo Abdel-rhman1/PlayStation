@@ -34,10 +34,12 @@
                     <svg class="w-4 h-4 me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     {{ now()->format('M d, Y') }}
                 </button>
+                @can('devices.view')
                 <a href="{{ route('devices.index') }}" class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-xl text-sm font-semibold text-white shadow-md shadow-primary-100 hover:bg-primary-700 transition-all">
                     <svg class="w-4 h-4 me-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                     {{ __('dashboard.new_session') }}
                 </a>
+                @endcan
             </div>
         </div>
     </div>
@@ -64,6 +66,9 @@
         @endphp
 
         @foreach($analytics as $item)
+        @if($item['label'] === __('reports.active_devices'))
+            @cannot('devices.view') @continue @endcannot
+        @endif
         <div class="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100 relative overflow-hidden group hover:border-primary-100 transition-all duration-300">
             <div class="flex items-center gap-4 relative z-10">
                 <div class="w-14 h-14 rounded-2xl bg-{{ $item['color'] }}-50 flex items-center justify-center text-{{ $item['color'] }}-600 group-hover:scale-110 transition-transform duration-500">

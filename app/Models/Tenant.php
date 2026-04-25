@@ -20,6 +20,11 @@ class Tenant extends Model
         return $this->belongsTo(Plan::class);
     }
 
+    public function owner()
+    {
+        return $this->hasOne(User::class)->oldestOfMany();
+    }
+
     public function devices()
     {
         return $this->hasMany(Device::class);

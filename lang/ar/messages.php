@@ -24,6 +24,8 @@ return [
     'documentation' => 'الوثائق',
     'operations' => 'العمليات',
     'retail' => 'التجزئة والاستراتيجية',
+    'administration' => 'الإدارة',
+    'name' => 'الاسم',
     'currency_symbol' => 'ج.م',
     'saas_control' => 'مركز تحكم SaaS',
     'global_dashboard' => 'لوحة التحكم العالمية',

@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <div class="space-y-10">
         <div class="flex items-center justify-between">
             <div>
@@ -67,4 +67,4 @@
             @endforeach
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>

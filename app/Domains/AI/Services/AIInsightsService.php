@@ -50,8 +50,7 @@ class AIInsightsService
      */
     protected function predictBusyHours(): array
     {
-        $peaks = DB::table('sessions')
-            ->select(DB::raw('HOUR(started_at) as hour'), DB::raw('COUNT(*) as count'))
+        $peaks = Session::select(DB::raw('HOUR(started_at) as hour'), DB::raw('COUNT(*) as count'))
             ->groupBy('hour')
             ->orderByDesc('count')
             ->limit(3)
