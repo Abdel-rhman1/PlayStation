@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Log;
 class SonoffHttpDriver implements DeviceDriverInterface
 {
     protected const PORT = 8081;
-    protected const RETRY_ATTEMPTS = 3;
-    protected const RETRY_DELAY_MS = 500;
-    protected const TIMEOUT = 5;
+    protected const RETRY_ATTEMPTS = 1;
+    protected const RETRY_DELAY_MS = 200;
+    protected const TIMEOUT = 2;
 
     /**
      * Send hardware ON command to device.

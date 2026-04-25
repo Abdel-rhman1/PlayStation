@@ -14,26 +14,9 @@ class DeviceControlService
      */
     public function turnOn(Device $device): bool
     {
-        Log::info("IoT Action: Sending ON command to device {$device->name} ({$device->id})");
-
-        try {
-            $driver = $this->resolveDriver($device);
-            $success = $driver->turnOn($device);
-
-            if ($success) {
-                Log::info("IoT Success: Device {$device->name} turned ON.");
-            } else {
-                Log::error("IoT Failure: Driver failed to turn ON device {$device->name}.");
-            }
-
-            return $success;
-        } catch (\Throwable $e) {
-            Log::critical("IoT Error: Exception during turnOn for device {$device->name}", [
-                'exception' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return false;
-        }
+        Log::info("IoT Queue: Dispatching ON command for device {$device->name}");
+        \App\Jobs\ControlDeviceHardware::dispatch($device, 'on');
+        return true;
     }
 
     /**
@@ -41,26 +24,9 @@ class DeviceControlService
      */
     public function turnOff(Device $device): bool
     {
-        Log::info("IoT Action: Sending OFF command to device {$device->name} ({$device->id})");
-
-        try {
-            $driver = $this->resolveDriver($device);
-            $success = $driver->turnOff($device);
-
-            if ($success) {
-                Log::info("IoT Success: Device {$device->name} turned OFF.");
-            } else {
-                Log::error("IoT Failure: Driver failed to turn OFF device {$device->name}.");
-            }
-
-            return $success;
-        } catch (\Throwable $e) {
-            Log::critical("IoT Error: Exception during turnOff for device {$device->name}", [
-                'exception' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return false;
-        }
+        Log::info("IoT Queue: Dispatching OFF command for device {$device->name}");
+        \App\Jobs\ControlDeviceHardware::dispatch($device, 'off');
+        return true;
     }
 
     /**

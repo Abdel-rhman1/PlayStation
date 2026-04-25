@@ -19,12 +19,12 @@ class EnsureShiftIsActive
         if ($user && !$user->shifts()->active()->exists()) {
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'An active shift is required to perform this action.'
+                    'message' => __('shifts.shift_required')
                 ], 403);
             }
 
             return redirect()->route('shifts.index')
-                ->with('error', 'You must open a shift before you can start sessions, create orders, or log expenses.');
+                ->with('error', __('shifts.shift_required'));
         }
 
         return $next($request);

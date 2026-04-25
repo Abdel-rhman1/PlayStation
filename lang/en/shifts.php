@@ -50,4 +50,5 @@ return [
     'status_open' => 'Open',
     'status_closed' => 'Closed',
     'no_shifts' => 'No shifts found in your history.',
+    'shift_required' => 'You must open a shift before you can start sessions, create orders, or log expenses.',
 ];
