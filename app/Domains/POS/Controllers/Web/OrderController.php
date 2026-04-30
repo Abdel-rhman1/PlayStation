@@ -64,4 +64,28 @@ class OrderController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+    public function markAsPaid(Order $order, Request $request)
+    {
+        try {
+            $this->posService->markAsPaid($order);
+            
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Order marked as paid successfully.',
+                    'order' => $order->fresh()
+                ]);
+            }
+
+            return back()->with('success', 'Order marked as paid successfully.');
+        } catch (\Exception $e) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ], 422);
+            }
+            return back()->with('error', $e->getMessage());
+        }
+    }
 }

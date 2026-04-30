@@ -31,4 +31,5 @@ return [
     'global_dashboard' => 'Global Dashboard',
     'all_tenancies' => 'All Tenancies',
     'pricing_plans' => 'Pricing Plans',
+    'system' => 'System',
 ];

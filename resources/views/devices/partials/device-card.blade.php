@@ -54,8 +54,6 @@
         <div class="mb-8">
             <h3 class="text-xl font-heading font-black text-gray-900 tracking-tight leading-tight group-hover:text-primary-600 transition-colors">{{ $device->name }}</h3>
             <div class="flex items-center gap-2 mt-2">
-                <span class="text-[10px] font-black uppercase tracking-widest text-gray-400 bg-gray-50 px-2 py-1 rounded-md">{{ $device->branch->name ?? 'Main' }}</span>
-                <span class="text-gray-200">•</span>
                 <span class="text-[10px] font-black uppercase tracking-widest text-primary-500">{{ __('messages.currency_symbol') }} {{ $device->hourly_rate }}/hr</span>
             </div>
         </div>

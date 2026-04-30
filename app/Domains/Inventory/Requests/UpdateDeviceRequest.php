@@ -16,12 +16,10 @@ class UpdateDeviceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'branch_id' => 'sometimes|required|exists:branches,id',
             'name' => 'sometimes|required|string|max:255',
             'ip_address' => 'sometimes|nullable|ip',
             'hourly_rate' => 'sometimes|required|numeric|min:0',
             'fixed_rate' => 'sometimes|nullable|numeric|min:0',
-            'status' => ['sometimes', 'required', new Enum(DeviceStatus::class)],
         ];
     }
 }

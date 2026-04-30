@@ -81,9 +81,28 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
             ->limit(6)
             ->get();
         
-        $activeDevicesCount = \App\Models\Device::where('status', 'IN_USE')->count();
-        $todayRevenue = \App\Models\Order::whereDate('created_at', today())->sum('total_price') + 
-                        \App\Models\Session::whereDate('created_at', today())->where('status', 'completed')->sum('cost');
+        $activeDevicesCount = \App\Models\Device::where('status', \App\Enums\DeviceStatus::IN_USE)->count();
+        \Illuminate\Support\Facades\Log::debug('Dashboard Stats', [
+            'active_devices_count' => $activeDevicesCount,
+            'total_devices' => \App\Models\Device::count(),
+        ]);
+        
+        // Sum paid orders + completed session costs for today
+        $posRevenue = \App\Models\Order::whereDate('created_at', today())
+            ->where('payment_status', 'paid')
+            ->sum('total_price');
+        
+        $sessionRevenue = \App\Models\Session::whereDate('created_at', today())
+            ->where('status', 'completed')
+            ->sum('cost');
+
+        $todayRevenue = $posRevenue + $sessionRevenue;
+        
+        \Illuminate\Support\Facades\Log::debug('Today Revenue Calculation', [
+            'pos_revenue' => $posRevenue,
+            'session_revenue' => $sessionRevenue,
+            'total' => $todayRevenue
+        ]);
         
         $totalSessionsToday = \App\Models\Session::whereDate('created_at', today())->count();
         $todayExpenses = \App\Models\Expense::whereDate('date', today())->sum('amount');
@@ -92,7 +111,8 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
         $currentShift = $user->shifts()->active()->first();
         $shiftRevenue = 0;
         if ($currentShift) {
-            $shiftRevenue = $currentShift->sessions()->sum('cost') + $currentShift->orders()->sum('total_price');
+            $shiftRevenue = $currentShift->sessions()->sum('cost') + 
+                           $currentShift->orders()->where('payment_status', 'paid')->sum('total_price');
         }
 
         $topDevices = $reportingService->getTopDevices(4);
@@ -115,7 +135,7 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
             Route::get('create', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'create'])->name('create');
             Route::post('/', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'store'])->name('store');
             Route::get('{device}/edit', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'edit'])->name('edit');
-            Route::patch('{device}', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'update'])->name('update');
+            Route::put('{device}', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'update'])->name('update');
             Route::delete('{device}', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'destroy'])->name('destroy');
         });
         
@@ -134,6 +154,7 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
     // Historic Auditing Module
     Route::group(['prefix' => 'sessions', 'as' => 'sessions.'], function() {
         Route::get('/', [\App\Domains\Sessions\Controllers\Web\WebSessionController::class, 'index'])->name('index');
+        Route::get('/{session}', [\App\Domains\Sessions\Controllers\Web\WebSessionController::class, 'show'])->name('show');
         Route::get('{session}/receipt', [\App\Domains\Sessions\Controllers\Web\WebSessionController::class, 'receipt'])->name('receipt');
     });
 
@@ -147,6 +168,7 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
     Route::get('/orders/export', [\App\Domains\POS\Controllers\Web\OrderController::class, 'export'])->name('orders.export');
     Route::get('/orders', [\App\Domains\POS\Controllers\Web\OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [\App\Domains\POS\Controllers\Web\OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/pay', [\App\Domains\POS\Controllers\Web\OrderController::class, 'markAsPaid'])->name('orders.pay');
 
     // Retail Inventory Management
     Route::middleware('permission:pos.orders')->group(function() {
@@ -179,6 +201,13 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
     Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [\App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Notifications Module
+    Route::group(['prefix' => 'notifications', 'as' => 'notifications.'], function() {
+        Route::get('/', [\App\Http\Controllers\Web\NotificationController::class, 'index'])->name('index');
+        Route::post('/mark-all-read', [\App\Http\Controllers\Web\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::post('/{id}/mark-read', [\App\Http\Controllers\Web\NotificationController::class, 'markAsRead'])->name('mark-read');
+    });
+
     // Platform Configuration
     Route::group(['prefix' => 'shifts', 'as' => 'shifts.'], function() {
         Route::get('/', [\App\Http\Controllers\Web\ShiftController::class, 'index'])->name('index');
@@ -190,6 +219,7 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
         Route::get('/{shift}/print', [\App\Http\Controllers\Web\ShiftController::class, 'print'])->name('print');
     });
 
+    Route::get('/sessions/{session}/data', [\App\Domains\Sessions\Controllers\Web\WebSessionController::class, 'data'])->name('sessions.data');
     Route::get('settings', [\App\Http\Controllers\Web\SettingsController::class, 'index'])->name('settings.index');
     Route::post('settings/profile', [\App\Http\Controllers\Web\SettingsController::class, 'updateProfile'])->name('settings.profile.update');
 

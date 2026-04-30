@@ -13,18 +13,27 @@ class SessionBillingService
     public function calculateTotal(Session $session): array
     {
         $devicePrice = $this->calculateDevicePrice($session);
-        $ordersTotal = $session->orders()->sum('total_price');
+        
+        $paidOrdersTotal = (float) $session->orders()->paid()->sum('total_price');
+        $unpaidOrdersTotal = (float) $session->orders()->unpaid()->sum('total_price');
 
         return [
-            'device_price' => $devicePrice,
-            'orders_total' => (float)$ordersTotal,
-            'grand_total'  => (float)($devicePrice + $ordersTotal),
+            'device_price' => (float)$devicePrice,
+            'paid_orders_total' => $paidOrdersTotal,
+            'unpaid_orders_total' => $unpaidOrdersTotal,
+            'grand_total'  => (float)($devicePrice + $paidOrdersTotal + $unpaidOrdersTotal),
+            'due_amount' => (float)($devicePrice + $unpaidOrdersTotal),
         ];
     }
 
     /**
-     * Calculate only the device usage price based on duration and rates.
+     * Calculate real-time totals for an active session including payment status breakdown.
      */
+    public function calculateRealTimeTotals(Session $session): array
+    {
+        return $this->calculateTotal($session);
+    }
+
     /**
      * Generate structured receipt data for a session and its linked orders.
      */
@@ -36,7 +45,18 @@ class SessionBillingService
         $endTime = $session->ended_at ?: now();
         $duration = $session->started_at->diff($endTime);
 
-        $ordersList = $session->orders->flatMap(function ($order) {
+        $paidOrdersList = $session->orders->where('payment_status', 'paid')->flatMap(function ($order) {
+            return $order->items->map(function ($item) {
+                return [
+                    'product_name' => $item->product->name,
+                    'quantity'     => $item->quantity,
+                    'unit_price'   => (float)$item->unit_price,
+                    'total_price'  => (float)$item->total_price,
+                ];
+            });
+        });
+
+        $unpaidOrdersList = $session->orders->where('payment_status', 'unpaid')->flatMap(function ($order) {
             return $order->items->map(function ($item) {
                 return [
                     'product_name' => $item->product->name,
@@ -55,12 +75,17 @@ class SessionBillingService
                 'duration'   => sprintf('%dh %dm %ds', $duration->h, $duration->i, $duration->s),
                 'price'      => $billing['device_price'],
             ],
-            'orders' => [
-                'items' => $ordersList->toArray(),
-                'total' => $billing['orders_total'],
+            'paid_orders' => [
+                'items' => $paidOrdersList->toArray(),
+                'total' => $billing['paid_orders_total'],
             ],
+            'unpaid_orders' => [
+                'items' => $unpaidOrdersList->toArray(),
+                'total' => $billing['unpaid_orders_total'],
+            ],
+            'due_amount' => $billing['due_amount'],
             'grand_total' => $billing['grand_total'],
-            'currency'    => 'USD', // Should be pulled from config ideally
+            'currency'    => 'EGP',
             'generated_at' => now()->format('Y-m-d H:i:s'),
         ];
     }

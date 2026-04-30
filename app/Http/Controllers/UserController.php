@@ -46,6 +46,15 @@ class UserController extends Controller
             'role_id'   => $validated['role_id'],
         ]);
 
+        // Notify about new user
+        auth()->user()->notify(new \App\Notifications\SystemNotification([
+            'title' => 'New User Created',
+            'message' => "User account for {$user->name} has been created successfully.",
+            'icon' => 'user-plus',
+            'type' => 'success',
+            'action_url' => route('users.index'),
+        ]));
+
         return redirect()->route('users.index')
             ->with('success', __('notifications.user_created'));
     }

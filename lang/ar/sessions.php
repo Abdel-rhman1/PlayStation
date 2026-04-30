@@ -16,4 +16,9 @@ return [
     'filter_logs' => 'تصفية السجلات',
     'clear' => 'مسح',
     'id' => 'المعرف:',
+    'all_statuses' => 'جميع الحالات',
+    'cancelled' => 'ملغي',
+    'date_range' => 'نطاق التاريخ',
+    'search_placeholder' => 'بحث بالمعرف، الجهاز، أو المشغل...',
+    'mins' => 'دقيقة',
 ];

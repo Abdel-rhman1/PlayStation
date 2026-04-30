@@ -12,7 +12,7 @@ class POSService
     /**
      * Create a new order with multiple items and link to an active session.
      */
-    public function createOrder(int $userId, array $items, ?string $deviceId = null): Order
+    public function createOrder(int $userId, array $items, ?string $deviceId = null, bool $isPaid = false): Order
     {
         if (!$deviceId) {
             throw new \Exception("A device must be selected to create an order.");
@@ -26,15 +26,16 @@ class POSService
         }
 
         $sessionId = $activeSession->id;
-
         $tenantId = $device->tenant_id;
 
-        return DB::transaction(function () use ($userId, $items, $sessionId, $tenantId) {
+        return DB::transaction(function () use ($userId, $items, $sessionId, $tenantId, $isPaid, $device) {
             $order = Order::create([
                 'tenant_id' => $tenantId,
                 'user_id' => $userId,
                 'session_id' => $sessionId,
-                'status' => 'pending',
+                'status' => $isPaid ? 'paid' : 'pending',
+                'payment_status' => $isPaid ? 'paid' : 'unpaid',
+                'paid_at' => $isPaid ? now() : null,
                 'total_price' => 0,
             ]);
 
@@ -56,6 +57,18 @@ class POSService
 
             $order->update(['total_price' => $totalPrice]);
 
+            // Notify about new order
+            $user = auth()->user();
+            if ($user) {
+                $user->notify(new \App\Notifications\SystemNotification([
+                    'title' => 'New Order Created',
+                    'message' => "An order for " . number_format($totalPrice, 2) . " " . __('messages.currency_symbol') . " was created for {$device->name}.",
+                    'icon' => 'shopping-cart',
+                    'type' => 'success',
+                    'action_url' => route('orders.index'),
+                ]));
+            }
+
             return $order->load('items.product');
         });
     }
@@ -65,7 +78,15 @@ class POSService
      */
     public function markAsPaid(Order $order): Order
     {
-        $order->update(['status' => 'paid']);
+        if ($order->payment_status === 'paid') {
+            throw new \Exception("Order is already paid.");
+        }
+
+        $order->update([
+            'status' => 'paid',
+            'payment_status' => 'paid',
+            'paid_at' => now(),
+        ]);
         return $order;
     }
 }

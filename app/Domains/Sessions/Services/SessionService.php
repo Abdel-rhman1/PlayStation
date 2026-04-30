@@ -64,6 +64,18 @@ class SessionService
 
             event(new \App\Events\DeviceTurnedOn($device));
 
+            // Notify about session start
+            $user = auth()->user();
+            if ($user) {
+                $user->notify(new \App\Notifications\SystemNotification([
+                    'title' => 'Session Started',
+                    'message' => "A new session has been started on {$device->name} by {$user->name}.",
+                    'icon' => 'play',
+                    'type' => 'success',
+                    'action_url' => route('sessions.index'),
+                ]));
+            }
+
             return $session;
         });
     }
@@ -106,7 +118,7 @@ class SessionService
             Receipt::create([
                 'session_id'   => $session->id,
                 'device_price' => $billing['device_price'],
-                'orders_total' => $billing['orders_total'],
+                'orders_total' => $billing['paid_orders_total'] + $billing['unpaid_orders_total'],
                 'grand_total'  => $billing['grand_total'],
                 'snapshot'     => $this->billingService->generateReceiptData($session),
             ]);
@@ -120,6 +132,18 @@ class SessionService
             ]);
 
             event(new \App\Events\DeviceTurnedOff($device));
+
+            // Notify about session completion
+            $user = auth()->user();
+            if ($user) {
+                $user->notify(new \App\Notifications\SystemNotification([
+                    'title' => 'Session Completed',
+                    'message' => "Session on {$device->name} has been completed. Total: " . number_format($billing['grand_total'], 2) . " " . __('messages.currency_symbol'),
+                    'icon' => 'stop',
+                    'type' => 'info',
+                    'action_url' => route('sessions.receipt', $session->id),
+                ]));
+            }
 
             return $session;
         });

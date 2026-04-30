@@ -88,6 +88,9 @@ class ReportController extends Controller
      */
     protected function applyFilters($query, Request $request): void
     {
+        // Exclude deleted devices
+        $query->whereNull('devices.deleted_at');
+
         if ($request->filled('start_date')) {
             $query->whereDate('sessions.started_at', '>=', $request->start_date);
         }

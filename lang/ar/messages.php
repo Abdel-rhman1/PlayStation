@@ -31,4 +31,5 @@ return [
     'global_dashboard' => 'لوحة التحكم العالمية',
     'all_tenancies' => 'جميع المستأجرين',
     'pricing_plans' => 'خطط الأسعار',
+    'system' => 'النظام',
 ];

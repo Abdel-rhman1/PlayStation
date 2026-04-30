@@ -15,4 +15,10 @@ return [
     'device_updated' => 'Device updated successfully!',
     'device_deleted' => 'Hardware decommissioned successfully.',
     'error' => 'An error occurred. Please try again.',
+    'title' => 'Notifications Center',
+    'subtitle' => 'Real-time alerts and activity logs for your business.',
+    'no_notifications' => 'No new notifications.',
+    'user_created' => 'User account created successfully.',
+    'user_updated' => 'User account updated successfully.',
+    'user_deleted' => 'User account deleted successfully.',
 ];

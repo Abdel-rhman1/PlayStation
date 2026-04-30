@@ -26,6 +26,7 @@ class RolesAndPermissionsSeeder extends Seeder
         'reports.view'      => 'View Reports',
         'settings.manage'   => 'Manage Settings',
         'users.manage'      => 'Manage Users & Roles',
+        'dashboard.stats'   => 'View Dashboard Stats',
     ];
 
     public function run(): void
@@ -44,6 +45,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'products.manage',
             'pos.access',
             'reports.view',
+            'dashboard.stats',
         ])->get();
 
         // Create owner & employee roles for each tenant

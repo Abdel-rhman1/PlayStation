@@ -2,7 +2,7 @@
 
 return [
     'title' => 'System Configuration',
-    'subtitle' => 'Manage your profile, billing, and global business rules.',
+    'subtitle' => 'Manage your profile, billing, and system limits.',
     'profile' => 'Profile',
     'subscription' => 'Subscription',
     'limits' => 'Limits & Hardware',

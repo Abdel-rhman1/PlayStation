@@ -141,7 +141,15 @@
                 <span class="text-sm font-black text-gray-900 shrink-0">{{ __('messages.currency_symbol') }} {{ number_format($device->total_revenue, 2) }}</span>
             </div>
             @empty
-            <div class="py-10 text-center text-gray-400 text-sm font-medium">No device data yet for this period.</div>
+            <div class="py-12 text-center flex flex-col items-center justify-center space-y-4">
+                <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-gray-200">
+                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7" /></svg>
+                </div>
+                <p class="text-gray-400 text-sm font-medium">No device data yet for this period.</p>
+                <a href="{{ route('devices.index') }}" class="px-4 py-2 bg-gray-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all">
+                    {{ __('devices.add_device') }}
+                </a>
+            </div>
             @endforelse
         </div>
 
@@ -169,7 +177,15 @@
                 <span class="text-sm font-black text-gray-900 shrink-0">{{ $product->total_sold }} {{ __('pos.products') }}</span>
             </div>
             @empty
-            <div class="py-10 text-center text-gray-400 text-sm font-medium">No product sales yet for this period.</div>
+            <div class="py-12 text-center flex flex-col items-center justify-center space-y-4">
+                <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-gray-200">
+                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                </div>
+                <p class="text-gray-400 text-sm font-medium">No product sales yet for this period.</p>
+                <a href="{{ route('products.index') }}" class="px-4 py-2 bg-gray-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black transition-all">
+                    {{ __('pos.inventory') ?? 'Manage Inventory' }}
+                </a>
+            </div>
             @endforelse
         </div>
     </div>

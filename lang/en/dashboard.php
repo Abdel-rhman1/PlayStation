@@ -14,4 +14,12 @@ return [
     'active' => 'Active',
     'no_recent_sessions' => 'No recent sessions found.',
     'no_data_available' => 'No data available yet.',
+    'billing_summary' => 'Billing Summary',
+    'running_time' => 'Running Time',
+    'due_now' => 'Due Now',
+    'usage_and_pending' => 'Usage + Pending Orders',
+    'operator_note' => 'Operator Note',
+    'session_live_warning' => 'This session is currently live. Totals are calculated in real-time and will be finalized upon stopping.',
+    'stop_session' => 'Stop Session',
+    'stop_confirm' => 'Are you sure you want to stop this session? This will finalize the bill.',
 ];

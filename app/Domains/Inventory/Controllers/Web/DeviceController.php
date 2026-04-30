@@ -20,19 +20,27 @@ class DeviceController extends Controller
     {
         $devices = $this->deviceService->listDevices(100); // Increased for dashboard view
         $activeDevicesCount = Device::where('status', \App\Enums\DeviceStatus::IN_USE)->count();
-        $branches = \App\Models\Branch::all();
-        return view('devices.index', compact('devices', 'branches', 'activeDevicesCount'));
+        return view('devices.index', compact('devices', 'activeDevicesCount'));
     }
 
     public function create(): View
     {
-        $branches = \App\Models\Branch::all();
-        return view('devices.create', compact('branches'));
+        return view('devices.create');
     }
 
     public function store(StoreDeviceRequest $request): RedirectResponse
     {
-        $this->deviceService->createDevice($request->validated());
+        $device = $this->deviceService->createDevice($request->validated());
+
+        // Notify about new device
+        auth()->user()->notify(new \App\Notifications\SystemNotification([
+            'title' => 'New Device Registered',
+            'message' => "Device {$device->name} has been added to your inventory.",
+            'icon' => 'plus',
+            'type' => 'success',
+            'action_url' => route('devices.index'),
+        ]));
+
         return redirect()->route('devices.index')->with('success', __('notifications.device_created'));
     }
 
@@ -44,8 +52,7 @@ class DeviceController extends Controller
 
     public function edit(Device $device): View
     {
-        $branches = \App\Models\Branch::all();
-        return view('devices.edit', compact('device', 'branches'));
+        return view('devices.edit', compact('device'));
     }
 
     public function update(UpdateDeviceRequest $request, Device $device): RedirectResponse

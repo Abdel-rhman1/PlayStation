@@ -239,9 +239,9 @@
             </div>
         </div>
 
-        @if(!empty($data['orders']['items']))
+        @if(!empty($data['unpaid_orders']['items']))
         <div class="buffet-section" style="margin-top: 25px;">
-            <span class="section-title">Cafeteria Items</span>
+            <span class="section-title">Cafeteria Items (To Pay)</span>
             <table class="order-table">
                 <thead>
                     <tr>
@@ -250,7 +250,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($data['orders']['items'] as $item)
+                    @foreach($data['unpaid_orders']['items'] as $item)
                     <tr>
                         <td>
                             <span class="item-name">{{ $item['product_name'] }}</span>
@@ -266,18 +266,50 @@
         </div>
         @endif
 
+        @if(!empty($data['paid_orders']['items']))
+        <div class="buffet-section" style="margin-top: 25px; opacity: 0.6;">
+            <span class="section-title">Cafeteria Items (Already Paid)</span>
+            <table class="order-table">
+                <tbody>
+                    @foreach($data['paid_orders']['items'] as $item)
+                    <tr>
+                        <td style="font-size: 10px;">
+                            <span>{{ $item['product_name'] }} ({{ $item['quantity'] }})</span>
+                        </td>
+                        <td style="text-align: right; font-size: 10px; font-weight: 600;">
+                            {{ __('messages.currency_symbol') }} {{ number_format($item['total_price'], 2) }}
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
+
         <div class="summary-box">
             <div class="detail-row">
-                <span>Subtotal (Usage)</span>
+                <span>Usage Cost</span>
                 <span>{{ __('messages.currency_symbol') }} {{ number_format($data['device']['price'], 2) }}</span>
             </div>
+            @if($data['unpaid_orders']['total'] > 0)
             <div class="detail-row">
-                <span>Subtotal (Buffet)</span>
-                <span>{{ __('messages.currency_symbol') }} {{ number_format($data['orders']['total'], 2) }}</span>
+                <span>Unpaid Items</span>
+                <span>{{ __('messages.currency_symbol') }} {{ number_format($data['unpaid_orders']['total'], 2) }}</span>
             </div>
+            @endif
+            @if($data['paid_orders']['total'] > 0)
+            <div class="detail-row" style="opacity: 0.5;">
+                <span>Previously Paid</span>
+                <span>- {{ __('messages.currency_symbol') }} {{ number_format($data['paid_orders']['total'], 2) }}</span>
+            </div>
+            @endif
             <div class="grand-total">
-                <span class="grand-total-label">Total Payable</span>
-                <span class="grand-total-amount">{{ __('messages.currency_symbol') }} {{ number_format($data['grand_total'], 2) }}</span>
+                <span class="grand-total-label">Final Amount Due</span>
+                <span class="grand-total-amount">{{ __('messages.currency_symbol') }} {{ number_format($data['due_amount'], 2) }}</span>
+            </div>
+            <div class="detail-row" style="margin-top: 10px; opacity: 0.4; font-size: 8px;">
+                <span>Total Session Value</span>
+                <span>{{ __('messages.currency_symbol') }} {{ number_format($data['grand_total'], 2) }}</span>
             </div>
         </div>
 

@@ -25,11 +25,6 @@
                 class="px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-200">
             {{ __('settings.limits') }}
         </button>
-        <button @click="activeTab = 'pricing'" 
-                :class="activeTab === 'pricing' ? 'bg-primary-600 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-50'"
-                class="px-6 py-3 rounded-2xl text-sm font-bold transition-all duration-200">
-            {{ __('settings.rules') }}
-        </button>
     </div>
 
     <!-- Tab Content -->
@@ -130,31 +125,6 @@
             </div>
         </div>
 
-        <!-- Pricing Tab -->
-        <div x-show="activeTab === 'pricing'" x-cloak class="p-10 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div class="max-w-2xl space-y-8">
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900">{{ __('settings.pricing_rules') }}</h3>
-                    <p class="text-sm text-gray-400">{{ __('settings.pricing_subtitle') }}</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-8">
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('settings.std_rate') }} ({{ __('messages.currency_symbol') }})</label>
-                        <input type="number" class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 font-black text-xl" value="10.00">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('settings.vip_rate') }} ({{ __('messages.currency_symbol') }})</label>
-                        <input type="number" class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 font-black text-xl" value="25.00">
-                    </div>
-                </div>
-
-                <div class="p-6 bg-yellow-50 rounded-2xl border border-yellow-100 flex gap-4">
-                    <svg class="w-6 h-6 text-yellow-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                    <p class="text-sm text-yellow-700 leading-relaxed">{{ __('settings.pricing_notice') }}</p>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 @endsection

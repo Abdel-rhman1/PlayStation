@@ -76,15 +76,6 @@
                                class="w-full bg-gray-50 border-transparent rounded-2xl px-4 py-4 focus:bg-white focus:ring-2 focus:ring-primary-500 transition-all font-bold text-gray-900 shadow-inner">
                     </div>
 
-                    <div>
-                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">{{ __('devices.branch') }}</label>
-                        <select name="branch_id" required 
-                                class="w-full bg-gray-50 border-transparent rounded-2xl px-4 py-4 focus:bg-white focus:ring-2 focus:ring-primary-500 transition-all font-bold text-gray-900 shadow-inner">
-                            @foreach($branches as $branch)
-                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
 
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">{{ __('devices.ip_address') }}</label>
@@ -119,23 +110,6 @@
 
     <!-- Filter Bar -->
     <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
-        <div class="flex items-center gap-4 bg-white p-2 rounded-2xl shadow-sm border border-gray-100 w-full md:w-auto">
-            <button @click="statusFilter = 'all'" 
-                    class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
-                    :class="statusFilter === 'all' ? 'bg-gray-900 text-white shadow-lg' : 'text-gray-400 hover:text-gray-900'">
-                {{ __('devices.filter_all') }}
-            </button>
-            <button @click="statusFilter = 'IN_USE'" 
-                    class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
-                    :class="statusFilter === 'IN_USE' ? 'bg-yellow-400 text-white shadow-lg shadow-yellow-100' : 'text-gray-400 hover:text-gray-900'">
-                {{ __('devices.filter_in_use') }}
-            </button>
-            <button @click="statusFilter = 'ON'" 
-                    class="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all"
-                    :class="statusFilter === 'ON' ? 'bg-green-500 text-white shadow-lg shadow-green-100' : 'text-gray-400 hover:text-gray-900'">
-                {{ __('devices.filter_available') }}
-            </button>
-        </div>
 
         <div class="relative w-full md:w-80">
             <input type="text" x-model="searchQuery" placeholder="{{ __('devices.search_placeholder') }}" 
@@ -147,7 +121,7 @@
     <!-- Devices Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         @forelse($devices as $device)
-            <div x-show="(searchQuery === '' || '{{ strtolower($device->name) }}'.includes(searchQuery.toLowerCase()) || '{{ strtolower($device->branch->name ?? '') }}'.includes(searchQuery.toLowerCase())) && (statusFilter === 'all' || '{{ $device->status->value }}' === statusFilter || (statusFilter === 'IN_USE' && {{ $device->activeSession ? 'true' : 'false' }}))"
+            <div x-show="searchQuery === '' || '{{ strtolower($device->name) }}'.includes(searchQuery.toLowerCase())"
                  x-transition:enter="transition ease-out duration-300"
                  x-transition:enter-start="opacity-0 scale-95"
                  x-transition:enter-end="opacity-100 scale-100">

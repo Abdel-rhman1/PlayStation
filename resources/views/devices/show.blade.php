@@ -13,8 +13,6 @@
                 <div class="flex items-center gap-2 mt-1">
                     <span class="w-2 h-2 rounded-full {{ $device->status->value === 'ON' ? 'bg-green-500 animate-pulse' : ($device->status->value === 'IN_USE' ? 'bg-primary-500' : 'bg-gray-400') }}"></span>
                     <span class="text-xs font-black uppercase text-gray-400 tracking-widest">{{ $device->status->value }}</span>
-                    <span class="text-gray-200 mx-2">•</span>
-                    <span class="text-xs font-bold text-gray-500">{{ $device->branch->name ?? __('devices.not_assigned') }}</span>
                 </div>
             </div>
         </div>

@@ -52,6 +52,17 @@
                     </div>
 
                     <div class="space-y-2">
+                        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Type</label>
+                        <select name="type" required class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 transition-all font-bold appearance-none @error('type') border-red-300 @enderror">
+                            <option value="">Select Type</option>
+                            @foreach(\App\Enums\ExpenseType::cases() as $type)
+                                <option value="{{ $type->value }}" {{ old('type') == $type->value ? 'selected' : '' }}>{{ ucfirst($type->name) }}</option>
+                            @endforeach
+                        </select>
+                        @error('type') <p class="text-[10px] font-bold text-red-500 uppercase tracking-wide">{{ $message }}</p> @enderror
+                    </div>
+
+                    <div class="space-y-2">
                         <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Description</label>
                         <input type="text" name="description" value="{{ old('description') }}"
                                class="w-full bg-gray-50 border-gray-100 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-primary-500 transition-all font-bold" 

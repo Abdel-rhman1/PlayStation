@@ -53,11 +53,13 @@
         </div>
 
         <!-- Notifications -->
-        <div class="relative" x-data="{ open: false, count: 3 }">
+        <div class="relative" x-data="{ open: false }">
             <button @click="open = !open" 
                     class="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-50 text-gray-500 hover:bg-gray-100 transition-colors relative">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                <span x-show="count > 0" class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+                @if(auth()->user()->unreadNotifications->count() > 0)
+                    <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-primary-600 ring-2 ring-white"></span>
+                @endif
             </button>
 
             <!-- Notifications Dropdown -->
@@ -66,35 +68,36 @@
                  x-cloak 
                  x-transition
                  class="absolute end-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl ring-1 ring-gray-100 overflow-hidden z-50">
-                <div class="p-4 border-b border-gray-50">
-                    <h3 class="font-black text-sm text-gray-900 uppercase tracking-widest">{{ __('messages.recent_activity') }}</h3>
+                <div class="p-4 border-b border-gray-50 flex items-center justify-between">
+                    <h3 class="font-black text-[10px] text-gray-900 uppercase tracking-[0.2em]">{{ __('messages.notifications') }}</h3>
+                    <a href="{{ route('notifications.index') }}" class="text-[10px] font-black uppercase text-primary-600 hover:text-primary-700 transition-colors tracking-widest">
+                        {{ __('messages.view') }}
+                    </a>
                 </div>
                 <div class="divide-y divide-gray-50 max-h-96 overflow-y-auto">
-                    <div class="p-4 hover:bg-gray-50 transition-colors flex gap-3">
-                        <div class="w-2 h-2 rounded-full bg-green-500 mt-1.5"></div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-900">Device PS5-04 Started</p>
-                            <p class="text-[10px] text-gray-400">2 minutes ago</p>
+                    @forelse(auth()->user()->unreadNotifications->take(5) as $notification)
+                        <a href="{{ $notification->data['action_url'] ?? route('notifications.index') }}" class="p-4 hover:bg-gray-50 transition-colors flex gap-3 group">
+                            <div class="w-2 h-2 rounded-full mt-1.5 flex-shrink-0 {{ $notification->data['type'] == 'success' ? 'bg-green-500' : ($notification->data['type'] == 'warning' ? 'bg-yellow-500' : 'bg-primary-500') }}"></div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-xs font-bold text-gray-900 truncate">{{ $notification->data['title'] ?? 'System Update' }}</p>
+                                <p class="text-[10px] text-gray-400 mt-0.5">{{ $notification->created_at->diffForHumans() }}</p>
+                            </div>
+                        </a>
+                    @empty
+                        <div class="p-8 text-center">
+                            <p class="text-[10px] font-black uppercase text-gray-300 tracking-widest">No unread alerts</p>
                         </div>
-                    </div>
-                    <div class="p-4 hover:bg-gray-50 transition-colors flex gap-3">
-                        <div class="w-2 h-2 rounded-full bg-blue-500 mt-1.5"></div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-900">New POS Order #842</p>
-                            <p class="text-[10px] text-gray-400">15 minutes ago</p>
-                        </div>
-                    </div>
-                    <div class="p-4 hover:bg-gray-50 transition-colors flex gap-3">
-                        <div class="w-2 h-2 rounded-full bg-yellow-500 mt-1.5"></div>
-                        <div>
-                            <p class="text-xs font-bold text-gray-900">Stock Alert: Redbull low</p>
-                            <p class="text-[10px] text-gray-400">1 hour ago</p>
-                        </div>
-                    </div>
+                    @endforelse
                 </div>
-                <button @click="count = 0; open = false" class="w-full py-3 bg-gray-50 text-[10px] font-black uppercase text-gray-400 hover:text-gray-900 transition-colors tracking-widest">
-                    {{ __('messages.mark_all_read') }}
-                </button>
+                
+                @if(auth()->user()->unreadNotifications->count() > 0)
+                    <form action="{{ route('notifications.mark-all-read') }}" method="POST" class="w-full">
+                        @csrf
+                        <button type="submit" class="w-full py-3 bg-gray-50 text-[10px] font-black uppercase text-gray-400 hover:text-gray-900 transition-colors tracking-widest border-t border-gray-50">
+                            {{ __('messages.mark_all_read') }}
+                        </button>
+                    </form>
+                @endif
             </div>
         </div>
 

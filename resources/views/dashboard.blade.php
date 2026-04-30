@@ -44,6 +44,7 @@
         </div>
     </div>
 
+    @can('dashboard.stats')
     <!-- Analytics Stat Cards -->
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4" 
          x-data="{ 
@@ -86,6 +87,7 @@
         </div>
         @endforeach
     </div>
+    @endcan
 
     <!-- Main Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -107,7 +109,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-50">
                         @forelse($recentSessions as $session)
-                        <tr class="hover:bg-gray-50 transition-colors group">
+                        <tr class="hover:bg-gray-50 transition-colors group cursor-pointer" onclick="window.location='{{ route('sessions.show', $session) }}'">
                             <td class="px-6 py-5">
                                 <div class="flex items-center gap-4">
                                     <div class="w-10 h-10 rounded-xl bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
@@ -128,7 +130,20 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="3" class="px-6 py-10 text-center text-gray-400 italic">{{ __('dashboard.no_recent_sessions') }}</td>
+                            <td colspan="3" class="px-6 py-20 text-center">
+                                <div class="flex flex-col items-center justify-center space-y-4">
+                                    <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-200">
+                                        <svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-900 font-bold">{{ __('dashboard.no_recent_sessions') }}</p>
+                                        <p class="text-gray-400 text-sm mt-1">{{ __('dashboard.no_sessions_desc') ?? 'Start your first gaming session to see it here.' }}</p>
+                                    </div>
+                                    <a href="{{ route('devices.index') }}" class="px-6 py-2 bg-gray-900 text-white rounded-xl text-xs font-bold hover:bg-black transition-all shadow-lg shadow-gray-200">
+                                        {{ __('dashboard.new_session') }}
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -145,37 +160,50 @@
             <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 space-y-6">
                 @php
                     $colors = ['primary', 'purple', 'indigo', 'blue'];
-                    $maxRev = $topDevices->max('total_revenue') ?: 1;
                 @endphp
-
-                @forelse($topDevices as $index => $device)
-                @php $color = $colors[$index % count($colors)]; $usage = round(($device->total_revenue / $maxRev) * 100); @endphp
-                <div class="space-y-3 group">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-2 h-2 rounded-full bg-{{ $color }}-500 group-hover:scale-150 transition-transform"></div>
-                            <span class="font-bold text-gray-900">{{ $device->name }}</span>
+                
+                @if($topDevices->count() > 0)
+                    @foreach($topDevices->values() as $index => $device)
+                    @php 
+                        $color = $colors[$index % count($colors)]; 
+                        $usage = $device->usage_percentage; 
+                    @endphp
+                    <div class="space-y-3 group">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full bg-{{ $color }}-500 group-hover:scale-150 transition-transform"></div>
+                                <span class="font-bold text-gray-900">{{ $device->name }}</span>
+                            </div>
+                            <span class="text-sm font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($device->total_revenue, 2) }}</span>
                         </div>
-                        <span class="text-sm font-black text-gray-900">{{ __('messages.currency_symbol') }} {{ number_format($device->total_revenue, 2) }}</span>
+                        <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-{{ $color }}-500 rounded-full transition-all duration-1000 ease-out" 
+                                 style="width: {{ $usage }}%"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                            <span>{{ __('dashboard.utilization') }}</span>
+                            <span>{{ $usage }}%</span>
+                        </div>
                     </div>
-                    <div class="h-2.5 w-full bg-gray-100 rounded-full overflow-hidden">
-                        <div class="h-full bg-{{ $color }}-500 rounded-full transition-all duration-1000 ease-out" 
-                             style="width: {{ $usage }}%"></div>
+                    @endforeach
+                @else
+                    <div class="py-12 text-center flex flex-col items-center justify-center space-y-4">
+                        <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-gray-200">
+                            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7" /></svg>
+                        </div>
+                        <div>
+                            <p class="text-gray-900 font-bold text-sm">{{ __('dashboard.no_data_available') }}</p>
+                            <p class="text-gray-400 text-[10px] mt-1">{{ __('dashboard.no_devices_desc') ?? 'Register your hardware to track performance.' }}</p>
+                        </div>
+                        <a href="{{ route('devices.index') }}" class="px-5 py-2 bg-primary-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary-700 transition-all shadow-md shadow-primary-100">
+                            {{ __('devices.add_device') }}
+                        </a>
                     </div>
-                    <div class="flex justify-between text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                        <span>{{ __('dashboard.utilization') }}</span>
-                        <span>{{ $usage }}%</span>
-                    </div>
-                </div>
-                @empty
-                <div class="py-10 text-center text-gray-400 italic">
-                    {{ __('dashboard.no_data_available') }}
-                </div>
-                @endforelse
+                @endif
 
-                <button class="w-full mt-4 py-4 rounded-2xl bg-gray-50 text-sm font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-all border border-transparent hover:border-gray-200">
+                <a href="{{ route('reports.index') }}" class="block w-full text-center mt-4 py-4 rounded-2xl bg-gray-50 text-sm font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-all border border-transparent hover:border-gray-200">
                     {{ __('dashboard.detailed_analytics') }}
-                </button>
+                </a>
             </div>
         </div>
     </div>

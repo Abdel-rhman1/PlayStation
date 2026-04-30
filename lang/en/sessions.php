@@ -16,4 +16,9 @@ return [
     'filter_logs' => 'Filter Logs',
     'clear' => 'Clear',
     'id' => 'ID:',
+    'all_statuses' => 'All Statuses',
+    'cancelled' => 'Cancelled',
+    'date_range' => 'Date Range',
+    'search_placeholder' => 'Search ID, Device, or Operator...',
+    'mins' => 'mins',
 ];

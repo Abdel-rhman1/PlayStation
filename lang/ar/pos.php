@@ -19,6 +19,8 @@ return [
     'clear_items' => 'مسح العناصر',
     'link_session' => 'الربط بجلسة (مطلوب)',
     'process_order' => 'معالجة الطلب',
+    'mark_as_paid' => 'تحصيل المبلغ الآن',
+    'mark_as_paid_desc' => 'سيتم وضع علامة "مدفوع" على الطلب فوراً',
     'added_toast' => 'تمت الإضافة',
     'device_required_toast' => 'اختيار الجهاز مطلوب',
     'process_confirm_toast' => 'هل تريد معالجة الطلب النهائي؟',

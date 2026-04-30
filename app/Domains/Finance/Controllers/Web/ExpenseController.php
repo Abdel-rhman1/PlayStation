@@ -41,6 +41,7 @@ class ExpenseController extends Controller
         $data = $request->validate([
             'amount' => 'required|numeric|min:0.01',
             'expense_category_id' => 'required|exists:expense_categories,id',
+            'type' => ['required', new Enum(ExpenseType::class)],
             'description' => 'nullable|string|max:255',
             'date' => 'required|date',
         ]);
@@ -55,6 +56,7 @@ class ExpenseController extends Controller
         $data = $request->validate([
             'amount' => 'required|numeric|min:0.01',
             'expense_category_id' => 'required|exists:expense_categories,id',
+            'type' => ['required', new Enum(ExpenseType::class)],
             'description' => 'nullable|string|max:255',
             'date' => 'required|date',
         ]);

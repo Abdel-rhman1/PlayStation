@@ -60,6 +60,14 @@ class Session extends Model
     }
 
     /**
+     * Get real-time financial breakdown for this session.
+     */
+    public function getRealTimeTotalsAttribute(): array
+    {
+        return app(\App\Services\Sessions\SessionBillingService::class)->calculateRealTimeTotals($this);
+    }
+
+    /**
      * Alias for ended_at to support legacy view references to end_time.
      */
     public function getEndTimeAttribute()

@@ -21,14 +21,49 @@ class WebSessionController extends Controller
     /**
      * Display a listing of sessions.
      */
-    public function index()
+    public function index(Request $request)
     {
         // For the sessions journal
-        $sessions = \App\Models\Session::with(['device', 'user'])
-            ->latest()
-            ->paginate(15);
+        $query = \App\Models\Session::with(['device', 'user']);
 
-        return view('sessions.index', compact('sessions'));
+        if ($request->filled('from')) {
+            $query->whereDate('started_at', '>=', $request->from);
+        }
+
+        if ($request->filled('to')) {
+            $query->whereDate('started_at', '<=', $request->to);
+        }
+
+        if ($request->filled('device_id')) {
+            $query->where('device_id', $request->device_id);
+        }
+
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('id', 'like', "%{$searchTerm}%")
+                  ->orWhereHas('device', function($dq) use ($searchTerm) {
+                      $dq->where('name', 'like', "%{$searchTerm}%");
+                  })
+                  ->orWhereHas('user', function($uq) use ($searchTerm) {
+                      $uq->where('name', 'like', "%{$searchTerm}%");
+                  });
+            });
+        }
+
+        $sessions = $query->latest()->paginate(15);
+        $devices = \App\Models\Device::all();
+        $users = \App\Models\User::all();
+
+        return view('sessions.index', compact('sessions', 'devices', 'users'));
     }
 
     /**
@@ -72,5 +107,27 @@ class WebSessionController extends Controller
     {
         $data = $billingService->generateReceiptData($session);
         return view('receipts.session', compact('data'));
+    }
+
+    /**
+     * Show live session details.
+     */
+    public function show(Session $session)
+    {
+        $session->load(['device', 'orders.items.product', 'user']);
+        return view('sessions.show', compact('session'));
+    }
+
+    /**
+     * Get live data for a session (JSON).
+     */
+    public function data(Session $session)
+    {
+        return response()->json([
+            'started_at' => $session->started_at->toIso8601String(),
+            'unpaid_orders_total' => (float) $session->orders()->unpaid()->sum('total_price'),
+            'paid_orders_total' => (float) $session->orders()->paid()->sum('total_price'),
+            'status' => $session->status,
+        ]);
     }
 }

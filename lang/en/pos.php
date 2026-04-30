@@ -19,6 +19,8 @@ return [
     'clear_items' => 'Clear Items',
     'link_session' => 'Link to Session (Required)',
     'process_order' => 'Process Order',
+    'mark_as_paid' => 'Collect Payment Now',
+    'mark_as_paid_desc' => 'Order will be marked as paid immediately',
     'added_toast' => 'Added',
     'device_required_toast' => 'Device selection required',
     'process_confirm_toast' => 'Process Final Order?',

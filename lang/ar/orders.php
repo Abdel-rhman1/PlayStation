@@ -12,7 +12,8 @@ return [
     'export_csv' => 'تصدير CSV',
     'new_order' => 'طلب جديد',
     'no_orders' => 'لم يتم العثور على طلبات في السجل.',
-    'paid' => 'مدفوع',
+    'unpaid' => 'غير مدفوع',
+    'pay_now' => 'دفع',
     'pending' => 'قيد الانتظار',
     'item_count' => ':count أصناف',
 ];

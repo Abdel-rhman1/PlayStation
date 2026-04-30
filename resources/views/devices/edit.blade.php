@@ -26,15 +26,6 @@
                     @error('name') <p class="mt-2 text-xs text-red-500 font-bold">{{ $message }}</p> @enderror
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">{{ __('devices.branch') }}</label>
-                    <select name="branch_id" required 
-                            class="w-full bg-gray-50 border-transparent rounded-[1.5rem] px-6 py-4 focus:bg-white focus:ring-4 focus:ring-primary-500/10 transition-all font-bold text-gray-900">
-                        @foreach($branches as $branch)
-                            <option value="{{ $branch->id }}" {{ old('branch_id', $device->branch_id) == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
 
                 <div>
                     <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">{{ __('devices.ip_address') }}</label>
@@ -61,19 +52,6 @@
                     </div>
                 </div>
 
-                <div class="col-span-1 md:col-span-2">
-                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">{{ __('devices.operating_status') }}</label>
-                    <div class="grid grid-cols-3 gap-4">
-                        @foreach(\App\Enums\DeviceStatus::cases() as $status)
-                        <label class="relative cursor-pointer group">
-                            <input type="radio" name="status" value="{{ $status->value }}" {{ old('status', $device->status->value) === $status->value ? 'checked' : '' }} class="peer sr-only">
-                            <div class="p-4 rounded-2xl border-2 border-gray-100 text-center peer-checked:border-primary-600 peer-checked:bg-primary-50/50 transition-all group-hover:border-gray-200">
-                                <span class="block text-xs font-black text-gray-400 peer-checked:text-primary-600 uppercase">{{ $status->value }}</span>
-                            </div>
-                        </label>
-                        @endforeach
-                    </div>
-                </div>
             </div>
 
             <div class="pt-6 border-t border-gray-50 flex gap-4">

@@ -39,7 +39,8 @@ class POSController extends Controller
             $this->posService->createOrder(
                 auth()->id(), 
                 $items, 
-                $request->input('device_id')
+                $request->input('device_id'),
+                (bool) $request->input('is_paid', false)
             );
 
             return back()->with('success', 'Order created successfully.');

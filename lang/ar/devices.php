@@ -41,4 +41,5 @@ return [
     'no_hardware_title' => 'لم يتم اكتشاف أجهزة',
     'no_hardware_desc' => 'ابدأ بتسجيل أول جهاز لك في هذا الفرع.',
     'btn_add_now' => 'إضافة جهاز الآن',
+    'all_devices' => 'جميع الأجهزة',
 ];

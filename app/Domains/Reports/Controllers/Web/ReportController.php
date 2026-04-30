@@ -44,7 +44,7 @@ class ReportController extends Controller
             ->orderBy('day')
             ->pluck('total', 'day');
 
-        $posRevenueDays = \App\Models\Order::where('status', 'paid')
+        $posRevenueDays = \App\Models\Order::where('payment_status', 'paid')
             ->whereDate('created_at', '>=', $from)
             ->whereDate('created_at', '<=', $to)
             ->selectRaw('DATE(created_at) as day, SUM(total_price) as total')

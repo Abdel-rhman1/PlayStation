@@ -35,7 +35,21 @@ class ExpenseService
     public function createExpense(int $userId, array $data): Expense
     {
         $data['user_id'] = $userId;
-        return Expense::create($data);
+        $expense = Expense::create($data);
+
+        // Notify about new expense
+        $user = auth()->user();
+        if ($user) {
+            $user->notify(new \App\Notifications\SystemNotification([
+                'title' => 'New Expense Recorded',
+                'message' => "An expense of " . number_format($expense->amount, 2) . " " . __('messages.currency_symbol') . " was added for {$expense->category->name}.",
+                'icon' => 'banknotes',
+                'type' => 'warning',
+                'action_url' => route('expenses.index'),
+            ]));
+        }
+
+        return $expense;
     }
 
     /**

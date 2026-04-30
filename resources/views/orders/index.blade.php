@@ -54,11 +54,27 @@
                             {{ __('messages.currency_symbol') }} {{ number_format($order->total_price, 2) }}
                         </td>
                         <td class="px-8 py-6">
-                            @if($order->status === 'paid' || $order->status === 'completed')
-                                <span class="px-3 py-1 rounded-full bg-green-50 text-green-700 text-[10px] font-black uppercase tracking-widest">{{ __('orders.paid') }}</span>
-                            @else
-                                <span class="px-3 py-1 rounded-full bg-yellow-50 text-yellow-700 text-[10px] font-black uppercase tracking-widest">{{ $order->status }}</span>
-                            @endif
+                            <div class="flex flex-col gap-1">
+                                @if($order->payment_status === 'paid')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 text-[10px] font-black uppercase tracking-widest w-fit">
+                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                                        {{ __('orders.paid') }}
+                                    </span>
+                                    @if($order->paid_at)
+                                        <span class="text-[9px] text-gray-400 font-bold px-1">{{ $order->paid_at->format('H:i') }}</span>
+                                    @endif
+                                @else
+                                    <div class="flex items-center gap-2">
+                                        <span class="px-3 py-1 rounded-full bg-yellow-50 text-yellow-700 text-[10px] font-black uppercase tracking-widest w-fit">{{ __('orders.unpaid') }}</span>
+                                        <form action="{{ route('orders.pay', $order) }}" method="POST" onclick="event.stopPropagation()">
+                                            @csrf
+                                            <button type="submit" class="px-3 py-1 bg-primary-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-primary-700 transition-all shadow-sm shadow-primary-100">
+                                                {{ __('orders.pay_now') }}
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endif
+                            </div>
                         </td>
                         <td class="px-8 py-6 text-end text-xs font-bold text-gray-400">
                             {{ $order->created_at->format('M d, H:i') }}

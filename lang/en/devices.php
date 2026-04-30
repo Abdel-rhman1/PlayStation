@@ -41,4 +41,5 @@ return [
     'no_hardware_title' => 'No hardware detected',
     'no_hardware_desc' => 'Start by registering your first device to this branch.',
     'btn_add_now' => 'Add Device Now',
+    'all_devices' => 'All Devices',
 ];

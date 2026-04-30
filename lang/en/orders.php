@@ -12,7 +12,8 @@ return [
     'export_csv' => 'Export CSV',
     'new_order' => 'New Order',
     'no_orders' => 'No orders found in history.',
-    'paid' => 'Paid',
+    'unpaid' => 'Unpaid',
+    'pay_now' => 'Pay',
     'pending' => 'Pending',
     'item_count' => ':count items',
 ];

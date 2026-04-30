@@ -121,6 +121,20 @@
                     <input type="hidden" name="cart_data" :value="JSON.stringify(cart)">
                     <input type="hidden" name="total_amount" :value="total">
                     <input type="hidden" name="device_id" :value="selectedDevice">
+                    <input type="hidden" name="is_paid" :value="isPaid ? 1 : 0">
+
+                    <div class="flex items-center gap-3 mb-4 p-4 bg-white rounded-xl border border-gray-100 shadow-sm cursor-pointer hover:bg-gray-100 transition-all" @click="isPaid = !isPaid">
+                        <div class="w-10 h-10 rounded-lg flex items-center justify-center transition-colors" :class="isPaid ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-xs font-black text-gray-900 uppercase tracking-tighter">{{ __('pos.mark_as_paid') }}</p>
+                            <p class="text-[10px] text-gray-400 font-medium">{{ __('pos.mark_as_paid_desc') }}</p>
+                        </div>
+                        <div class="w-12 h-6 rounded-full relative transition-colors" :class="isPaid ? 'bg-green-500' : 'bg-gray-200'">
+                            <div class="absolute top-1 w-4 h-4 rounded-full bg-white transition-all" :class="isPaid ? 'right-1' : 'left-1'"></div>
+                        </div>
+                    </div>
                     <button type="submit" :disabled="cart.length === 0" class="w-full bg-primary-600 text-white font-black py-4 rounded-xl shadow-lg hover:bg-primary-700 active:scale-95 transition-all disabled:opacity-50">
                         {{ __('pos.process_order') }}
                     </button>
@@ -143,6 +157,7 @@
             selectedDevice: '',
             activeCategory: 'all',
             showCart: false,
+            isPaid: false,
             
             get total() {
                 return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
