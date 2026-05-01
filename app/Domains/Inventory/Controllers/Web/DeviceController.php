@@ -34,8 +34,8 @@ class DeviceController extends Controller
 
         // Notify about new device
         auth()->user()->notify(new \App\Notifications\SystemNotification([
-            'title' => 'New Device Registered',
-            'message' => "Device {$device->name} has been added to your inventory.",
+            'title' => __('notifications.device_registered_title'),
+            'message' => __('notifications.device_registered_msg', ['name' => $device->name]),
             'icon' => 'plus',
             'type' => 'success',
             'action_url' => route('devices.index'),

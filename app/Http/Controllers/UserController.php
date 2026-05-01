@@ -48,8 +48,8 @@ class UserController extends Controller
 
         // Notify about new user
         auth()->user()->notify(new \App\Notifications\SystemNotification([
-            'title' => 'New User Created',
-            'message' => "User account for {$user->name} has been created successfully.",
+            'title' => __('notifications.user_created_title'),
+            'message' => __('notifications.user_created_msg', ['name' => $user->name]),
             'icon' => 'user-plus',
             'type' => 'success',
             'action_url' => route('users.index'),

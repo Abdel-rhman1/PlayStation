@@ -72,8 +72,12 @@ class POSService
             $user = auth()->user();
             if ($user) {
                 $user->notify(new \App\Notifications\SystemNotification([
-                    'title' => 'New Order Created',
-                    'message' => "An order for " . number_format($totalPrice, 2) . " " . __('messages.currency_symbol') . " was created for {$device->name}.",
+                    'title' => __('notifications.order_created_title'),
+                    'message' => __('notifications.order_created_msg', [
+                        'amount' => number_format($totalPrice, 2),
+                        'currency' => __('messages.currency_symbol'),
+                        'device' => $device->name
+                    ]),
                     'icon' => 'shopping-cart',
                     'type' => 'success',
                     'action_url' => route('orders.index'),

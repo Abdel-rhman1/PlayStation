@@ -9,10 +9,11 @@ class Tenant extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'is_active', 'plan_id', 'subscription_ends_at'];
+    protected $fillable = ['name', 'slug', 'is_active', 'plan_id', 'subscription_ends_at', 'trial_ends_at'];
 
     protected $casts = [
         'subscription_ends_at' => 'datetime',
+        'trial_ends_at' => 'datetime',
     ];
 
     public function plan()
@@ -32,10 +33,19 @@ class Tenant extends Model
 
     public function hasActiveSubscription(): bool
     {
+        if ($this->onTrial()) {
+            return true;
+        }
+
         if (!$this->plan_id || !$this->subscription_ends_at) {
             return false;
         }
 
         return $this->subscription_ends_at->isFuture();
+    }
+
+    public function onTrial(): bool
+    {
+        return $this->trial_ends_at && $this->trial_ends_at->isFuture();
     }
 }

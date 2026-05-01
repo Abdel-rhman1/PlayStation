@@ -35,4 +35,12 @@ return [
     'payment_failed' => 'فشل معالجة الدفع.',
     'payment_success' => 'تمت معالجة الدفع بنجاح.',
     'auto_settled' => 'تمت التسوية تلقائياً عند الإغلاق',
+    'feature_locked' => "وحدة ':feature' مغلقة في خطتك الحالية. قم بالترقية لفتحها!",
+    'device_limit_reached' => "خطتك الحالية ':plan' محدودة بـ :limit أجهزة فقط. يرجى الترقية لإضافة المزيد.",
+    'limit_reached_title' => 'تم الوصول للحد الأقصى',
+    'confirm_title' => 'هل أنت متأكد؟',
+    'confirm_delete_title' => 'حذف :item؟',
+    'confirm_delete_msg' => 'هل أنت متأكد أنك تريد إزالة :item؟ لا يمكن التراجع عن هذا الإجراء.',
+    'yes_proceed' => 'نعم، استمر',
+    'no_cancel' => 'لا، إلغاء',
 ];

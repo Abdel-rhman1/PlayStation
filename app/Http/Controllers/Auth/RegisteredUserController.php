@@ -53,11 +53,13 @@ class RegisteredUserController extends Controller
             }
 
             // 1. Create the Tenant
+            $isTrial = (int)$request->plan_id === 4;
             $tenant = \App\Models\Tenant::create([
                 'name' => $request->shop_name,
                 'slug' => $slug,
                 'plan_id' => $request->plan_id,
-                'subscription_ends_at' => now()->addDays(14), // 14 day trial
+                'subscription_ends_at' => $isTrial ? null : now()->addDays(30),
+                'trial_ends_at' => $isTrial ? now()->addDays(14) : null,
                 'is_active' => true,
             ]);
 

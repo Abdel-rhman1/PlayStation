@@ -83,29 +83,17 @@
                                class="w-full bg-gray-50 border-transparent rounded-2xl px-4 py-4 focus:bg-white focus:ring-2 focus:ring-primary-500 transition-all font-bold text-gray-900 shadow-inner">
                     </div>
 
-                    <div>
-                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">{{ __('devices.hourly_rate') }} ({{ __('messages.currency_symbol') }})</label>
-                        <input type="number" step="0.01" name="hourly_rate" required placeholder="10.00" 
-                               class="w-full bg-gray-50 border-transparent rounded-2xl px-4 py-4 focus:bg-white focus:ring-2 focus:ring-primary-500 transition-all font-bold text-gray-900 text-center shadow-inner">
-                    </div>
-
-                    <div>
-                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">{{ __('devices.fixed_rate') }} ({{ __('messages.currency_symbol') }})</label>
-                        <input type="number" step="0.01" name="fixed_rate" value="0.00" 
-                               class="w-full bg-gray-50 border-transparent rounded-2xl px-4 py-4 focus:bg-white focus:ring-2 focus:ring-primary-500 transition-all font-bold text-gray-900 text-center shadow-inner">
-                    </div>
-
                     <div class="col-span-2 pt-4 border-t border-gray-50">
-                        <label class="block text-[10px] font-black text-primary-500 uppercase tracking-widest mb-4">Player Based Pricing (Optional)</label>
+                        <label class="block text-[10px] font-black text-primary-500 uppercase tracking-widest mb-4">{{ __('devices.rate_config') }}</label>
                         <div class="grid grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">{{ __('sessions.single_mode') }} (2P)</label>
-                                <input type="number" step="0.01" name="player_pricing[2]" placeholder="e.g. 15.00" 
+                                <input type="number" step="0.01" name="player_pricing[2]" required placeholder="e.g. 15.00" 
                                        class="w-full bg-gray-50 border-transparent rounded-2xl px-4 py-4 focus:bg-white focus:ring-2 focus:ring-primary-500 transition-all font-bold text-gray-900 shadow-inner">
                             </div>
                             <div>
                                 <label class="block text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">{{ __('sessions.multi_mode') }} (4P)</label>
-                                <input type="number" step="0.01" name="player_pricing[4]" placeholder="e.g. 25.00" 
+                                <input type="number" step="0.01" name="player_pricing[4]" required placeholder="e.g. 25.00" 
                                        class="w-full bg-gray-50 border-transparent rounded-2xl px-4 py-4 focus:bg-white focus:ring-2 focus:ring-primary-500 transition-all font-bold text-gray-900 shadow-inner">
                             </div>
                         </div>

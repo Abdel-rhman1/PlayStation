@@ -5,8 +5,8 @@
     <!-- Page Header -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-            <h2 class="text-2xl font-heading font-black text-gray-900 tracking-tight">{{ __('notifications.title') ?? 'Notifications' }}</h2>
-            <p class="text-gray-500 text-sm">{{ __('notifications.subtitle') ?? 'Stay updated with your business activity.' }}</p>
+            <h2 class="text-2xl font-heading font-black text-gray-900 tracking-tight">{{ __('notifications.title') }}</h2>
+            <p class="text-gray-500 text-sm">{{ __('notifications.stay_updated') }}</p>
         </div>
         
         <div class="flex items-center gap-4">
@@ -70,7 +70,7 @@
                                 <form action="{{ route('notifications.mark-read', $notification->id) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="text-[10px] font-black uppercase tracking-widest text-primary-600 hover:text-primary-700 transition-colors">
-                                        Mark as Read
+                                        {{ __('notifications.mark_read') }}
                                     </button>
                                 </form>
                             @endunless
@@ -88,8 +88,8 @@
                         <svg class="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                     </div>
                     <div class="space-y-1">
-                        <h4 class="text-xl font-bold text-gray-900">{{ __('notifications.no_notifications') ?? 'All caught up!' }}</h4>
-                        <p class="text-sm text-gray-400">We'll notify you when something important happens.</p>
+                        <h4 class="text-xl font-bold text-gray-900">{{ __('notifications.all_caught_up') }}</h4>
+                        <p class="text-sm text-gray-400">{{ __('notifications.empty_description') }}</p>
                     </div>
                 </div>
             @endforelse

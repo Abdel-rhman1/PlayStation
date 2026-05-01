@@ -18,11 +18,11 @@ class StoreDeviceRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'ip_address' => 'nullable|ip',
-            'hourly_rate' => 'required|numeric|min:0',
+            'hourly_rate' => 'nullable|numeric|min:0',
             'fixed_rate' => 'nullable|numeric|min:0',
-            'player_pricing' => 'nullable|array',
-            'player_pricing.2' => 'nullable|numeric|min:0',
-            'player_pricing.4' => 'nullable|numeric|min:0',
+            'player_pricing' => 'required|array',
+            'player_pricing.2' => 'required|numeric|min:0',
+            'player_pricing.4' => 'required|numeric|min:0',
         ];
     }
 }

@@ -35,4 +35,12 @@ return [
     'payment_failed' => 'Failed to process payment.',
     'payment_success' => 'Payment processed successfully.',
     'auto_settled' => 'Auto Settled on Close',
+    'feature_locked' => "The ':feature' module is locked in your current plan. Upgrade to unlock!",
+    'device_limit_reached' => "Your current plan ':plan' is limited to :limit devices. Please upgrade to add more.",
+    'limit_reached_title' => 'Limit Reached',
+    'confirm_title' => 'Are you sure?',
+    'confirm_delete_title' => 'Delete :item?',
+    'confirm_delete_msg' => 'Are you sure you want to remove :item? This action cannot be undone.',
+    'yes_proceed' => 'Yes, Proceed',
+    'no_cancel' => 'No, Cancel',
 ];

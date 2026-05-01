@@ -41,8 +41,12 @@ class ExpenseService
         $user = auth()->user();
         if ($user) {
             $user->notify(new \App\Notifications\SystemNotification([
-                'title' => 'New Expense Recorded',
-                'message' => "An expense of " . number_format($expense->amount, 2) . " " . __('messages.currency_symbol') . " was added for {$expense->category->name}.",
+                'title' => __('notifications.expense_recorded_title'),
+                'message' => __('notifications.expense_recorded_msg', [
+                    'amount' => number_format($expense->amount, 2),
+                    'currency' => __('messages.currency_symbol'),
+                    'category' => $expense->category->name ?? 'General'
+                ]),
                 'icon' => 'banknotes',
                 'type' => 'warning',
                 'action_url' => route('expenses.index'),

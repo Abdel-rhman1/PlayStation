@@ -87,10 +87,13 @@
                                     <span class="text-sm font-bold text-gray-900">{{ $session->user->name ?? 'System' }}</span>
                                 </td>
                                 <td class="px-8 py-5">
-                                    <span class="px-2 py-1 rounded bg-gray-100 text-[10px] font-black uppercase text-gray-500 tracking-tighter">{{ $session->type }}</span>
+                                    <span class="px-3 py-1 rounded-full bg-primary-50 text-[10px] font-black uppercase text-primary-600 tracking-wider">{{ $session->player_mode_label }} ({{ $session->player_count }}P)</span>
                                 </td>
                                 <td class="px-8 py-5 text-sm text-gray-500 font-medium">
-                                    {{ $session->total_duration ?? '0' }} mins
+                                    <div class="flex items-center gap-2">
+                                        <svg class="w-4 h-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                        {{ $session->duration }} {{ __('sessions.mins') }}
+                                    </div>
                                 </td>
                                 <td class="px-8 py-5 text-end font-heading font-black text-gray-900">
                                     {{ __('messages.currency_symbol') }} {{ number_format($session->total_price, 2) }}

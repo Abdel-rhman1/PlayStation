@@ -70,8 +70,11 @@ class SessionService
             $user = auth()->user();
             if ($user) {
                 $user->notify(new \App\Notifications\SystemNotification([
-                    'title' => 'Session Started',
-                    'message' => "A new session has been started on {$device->name} by {$user->name}.",
+                    'title' => __('notifications.session_started_title'),
+                    'message' => __('notifications.session_started_msg', [
+                        'device' => $device->name,
+                        'user' => $user->name
+                    ]),
                     'icon' => 'play',
                     'type' => 'success',
                     'action_url' => route('sessions.index'),
@@ -151,8 +154,12 @@ class SessionService
             $user = auth()->user();
             if ($user) {
                 $user->notify(new \App\Notifications\SystemNotification([
-                    'title' => 'Session Completed',
-                    'message' => "Session on {$device->name} has been completed. Total: " . number_format($billing['grand_total'], 2) . " " . __('messages.currency_symbol'),
+                    'title' => __('notifications.session_completed_title'),
+                    'message' => __('notifications.session_completed_msg', [
+                        'device' => $device->name,
+                        'total' => number_format($billing['grand_total'], 2),
+                        'currency' => __('messages.currency_symbol')
+                    ]),
                     'icon' => 'stop',
                     'type' => 'info',
                     'action_url' => route('sessions.receipt', $session->id),

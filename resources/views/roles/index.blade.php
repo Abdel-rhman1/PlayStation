@@ -63,7 +63,7 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-2xl font-black text-gray-900 capitalize tracking-tight">{{ $role->name }}</h3>
+                            <h3 class="text-2xl font-black text-gray-900 capitalize tracking-tight">{{ __('roles.names.' . strtolower($role->name)) ?: $role->name }}</h3>
                             <p class="text-xs text-gray-400 font-medium mt-0.5">{{ $role->description ?? __('roles.description_hint') }}</p>
                         </div>
                     </div>
@@ -123,7 +123,9 @@
                                     <p class="text-xs font-bold {{ $checked ? $c['text'] : 'text-gray-600' }} truncate transition-colors">
                                         {{ Lang::has("permissions.names.{$permission->name}") ? __("permissions.names.{$permission->name}") : $permission->name }}
                                      </p>
-                                    <p class="text-[9px] text-gray-400 font-black uppercase tracking-tighter">{{ $permission->name }}</p>
+                                    @if(!Lang::has("permissions.names.{$permission->name}"))
+                                        <p class="text-[9px] text-gray-400 font-black uppercase tracking-tighter">{{ $permission->name }}</p>
+                                    @endif
                                 </div>
                             </label>
                             @endforeach

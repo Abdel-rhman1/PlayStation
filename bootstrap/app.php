@@ -26,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'shift-active' => \App\Http\Middleware\EnsureShiftIsActive::class,
             'super-admin' => \App\Http\Middleware\SuperAdminMiddleware::class,
             'plan.feature' => \App\Http\Middleware\CheckPlanFeature::class,
+            'check-plan' => \App\Http\Middleware\CheckPlanMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

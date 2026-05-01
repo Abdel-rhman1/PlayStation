@@ -19,4 +19,6 @@ return [
     'shop_name' => 'Shop Name',
     'shop_subdomain' => 'Shop Subdomain',
     'choose_plan' => 'Choose Plan',
+    'trial_expired' => 'Your free trial has expired. Please upgrade to a paid plan to continue.',
+    'subscription_expired' => 'Your subscription has expired. Please renew to continue.',
 ];

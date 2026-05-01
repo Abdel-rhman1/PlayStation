@@ -17,4 +17,8 @@ return [
     'users_label'         => 'Users',
     'full_branch_access'  => 'Full Branch Access',
     'full_branch_desc'    => 'Allows access to all branch locations',
+    'names' => [
+        'owner' => 'System Owner',
+        'employee' => 'Employee / Operator',
+    ],
 ];

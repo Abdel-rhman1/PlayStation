@@ -189,38 +189,13 @@
             this.confirmModal = { open: true, title, message, onConfirm: callback };
         },
         init() {
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 4000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.onmouseenter = Swal.stopTimer;
-                    toast.onmouseleave = Swal.resumeTimer;
-                }
-            });
-
-            @if(session('success'))
-                Toast.fire({ icon: 'success', title: '{{ session('success') }}' });
-            @endif
-            @if(session('error'))
-                Swal.fire({ 
-                    icon: 'error', 
-                    title: 'Access Restricted',
-                    text: '{{ session('error') }}',
-                    confirmButtonColor: '#2563eb',
-                    customClass: {
-                        popup: 'rounded-[2rem]',
-                        confirmButton: 'rounded-2xl px-6 py-3 font-bold'
-                    }
-                });
-            @endif
-            @if($errors->any())
-                @foreach($errors->all() as $error)
-                    Toast.fire({ icon: 'error', title: '{{ $error }}' });
-                @endforeach
-            @endif
+            // Echo Listeners
+            if (window.Echo) {
+                window.Echo.private(`tenants.${window.tenantId}`)
+                    .listen('DeviceTurnedOn', (e) => {
+                        this.toasts.push({ id: Date.now(), message: 'Device status updated: ON', type: 'info' });
+                    });
+            }
         }
       }">
     
@@ -259,8 +234,8 @@
                 <p class="text-sm text-gray-400 mt-2" x-text="confirmModal.message"></p>
             </div>
             <div class="flex gap-4">
-                <button @click="confirmModal.open = false" class="flex-1 py-4 rounded-2xl bg-gray-100 font-bold text-gray-500 hover:bg-gray-200 transition-all">No, Cancel</button>
-                <button @click="confirmModal.onConfirm(); confirmModal.open = false" class="flex-1 py-4 rounded-2xl bg-red-600 font-bold text-white hover:bg-red-700 transition-all">Yes, Proceed</button>
+                <button @click="confirmModal.open = false" class="flex-1 py-4 rounded-2xl bg-gray-100 font-bold text-gray-500 hover:bg-gray-200 transition-all">{{ __('messages.no_cancel') }}</button>
+                <button @click="confirmModal.onConfirm(); confirmModal.open = false" class="flex-1 py-4 rounded-2xl bg-red-600 font-bold text-white hover:bg-red-700 transition-all">{{ __('messages.yes_proceed') }}</button>
             </div>
         </div>
     </div>
@@ -296,5 +271,61 @@
         @include('layouts.partials.footer')
     </div>
 
+    <!-- Notifications & Alerts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                background: '#ffffff',
+                color: '#111827',
+                customClass: {
+                    popup: 'rounded-3xl border border-gray-100 shadow-2xl p-4',
+                    title: 'font-bold text-sm'
+                },
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+
+            @if(session('success'))
+                Toast.fire({ icon: 'success', title: '{{ session('success') }}' });
+            @endif
+
+            @if(session('error'))
+                Swal.fire({ 
+                    icon: 'error', 
+                    title: '{{ session('error_title') ?? (app()->getLocale() == 'ar' ? "تنبيه النظام" : "Access Restricted") }}',
+                    text: '{{ session('error') }}',
+                    confirmButtonText: '{{ app()->getLocale() == 'ar' ? "حسناً" : "Got it" }}',
+                    confirmButtonColor: '#0f172a',
+                    padding: '2.5rem',
+                    background: '#ffffff',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInUp animate__faster'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutDown animate__faster'
+                    },
+                    customClass: {
+                        popup: 'rounded-[3rem] border-none shadow-[0_20px_50px_rgba(0,0,0,0.1)]',
+                        title: 'font-heading font-black text-2xl text-gray-900',
+                        htmlContainer: 'font-medium text-gray-500',
+                        confirmButton: 'rounded-2xl px-10 py-4 font-black uppercase tracking-widest text-xs transition-all hover:scale-105 active:scale-95'
+                    }
+                });
+            @endif
+
+            @if($errors->any())
+                @foreach($errors->all() as $error)
+                    Toast.fire({ icon: 'error', title: '{{ $error }}' });
+                @endforeach
+            @endif
+        });
+    </script>
 </body>
 </html>

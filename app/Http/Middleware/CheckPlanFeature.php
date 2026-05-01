@@ -26,12 +26,12 @@ class CheckPlanFeature
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'status' => 'error',
-                        'message' => "The '{$feature}' feature is not available in your {$tenant->plan->name} plan.",
+                        'message' => __('messages.feature_locked', ['feature' => $feature]),
                     ], 403);
                 }
 
-                return redirect()->route('dashboard')
-                    ->with('error', "Your current plan does not include access to the '{$feature}' module. Please upgrade to continue.");
+                return redirect()->back()
+                    ->with('error', __('messages.feature_locked', ['feature' => $feature]));
             }
         }
 

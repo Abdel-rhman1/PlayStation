@@ -17,4 +17,8 @@ return [
     'users_label'         => 'مستخدمون',
     'full_branch_access'  => 'صلاحية الوصول الكامل للفروع',
     'full_branch_desc'    => 'يسمح بالوصول إلى جميع مواقع الفروع',
+    'names' => [
+        'owner' => 'مالك النظام',
+        'employee' => 'موظف / مشغل',
+    ],
 ];

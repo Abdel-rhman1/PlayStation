@@ -22,6 +22,13 @@ class DeviceService
     {
         return DB::transaction(function() use ($data) {
             $playerPricing = $data['player_pricing'] ?? [];
+            
+            // Derive hourly_rate from 2P pricing if not explicitly provided
+            if ((!isset($data['hourly_rate']) || $data['hourly_rate'] === null) && isset($playerPricing[2])) {
+                $data['hourly_rate'] = $playerPricing[2];
+            }
+            $data['fixed_rate'] = $data['fixed_rate'] ?? 0;
+            
             unset($data['player_pricing']);
             
             $device = Device::create($data);

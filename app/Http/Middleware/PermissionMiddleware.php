@@ -30,7 +30,7 @@ class PermissionMiddleware
         foreach ($permissions as $permission) {
             if (!$request->user()->can(trim($permission))) {
                 $message = 'You do not have the required permission to access this resource.';
-
+                Log::Info(['Message '=>$message]);
                 if ($request->expectsJson() || $request->is('api/*')) {
                     return response()->json([
                         'status' => 'error',
