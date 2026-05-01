@@ -16,4 +16,5 @@ return [
     'delete_confirm_title' => 'Delete Product?',
     'delete_confirm_msg' => 'This action cannot be undone.',
     'uncategorized' => 'Uncategorized',
+    'insufficient_stock' => 'Insufficient stock for :name. Available: :stock',
 ];

@@ -21,10 +21,17 @@ class EnforceDeviceLimit
             $deviceCount = $tenant->devices()->count();
             
             if ($deviceCount >= $tenant->plan->device_limit) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => "Device limit reached for your {$tenant->plan->name} plan.",
-                ], 403);
+                $message = "Your current plan '{$tenant->plan->name}' is limited to {$tenant->plan->device_limit} devices. Please upgrade to add more.";
+
+                if ($request->expectsJson() || $request->is('api/*')) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => $message,
+                    ], 403);
+                }
+
+                return redirect()->back()
+                    ->with('error', $message);
             }
         }
 

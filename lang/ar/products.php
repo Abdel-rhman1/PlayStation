@@ -16,4 +16,5 @@ return [
     'delete_confirm_title' => 'حذف المنتج؟',
     'delete_confirm_msg' => 'هذا الإجراء لا يمكن التراجع عنه.',
     'uncategorized' => 'غير مصنف',
+    'insufficient_stock' => 'المخزون غير كافٍ لـ :name. المتوفر: :stock',
 ];

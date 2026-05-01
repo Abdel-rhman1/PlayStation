@@ -52,6 +52,32 @@
                     </div>
                 </div>
 
+                <div class="col-span-1 md:col-span-2 pt-6 border-t border-gray-50">
+                    <label class="block text-[11px] font-black text-primary-600 uppercase tracking-[0.2em] mb-6">Player Based Pricing (Optional)</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">{{ __('sessions.single_mode') }} (2 Players)</label>
+                            <div class="relative">
+                                <span class="absolute start-6 top-1/2 -translate-y-1/2 font-black text-gray-400">$</span>
+                                <input type="number" step="0.01" name="player_pricing[2]" 
+                                       value="{{ old('player_pricing.2', $device->playerPricing->where('player_count', 2)->first()?->price_per_hour) }}" 
+                                       class="w-full bg-gray-50 border-transparent rounded-[1.5rem] ps-10 pe-6 py-4 focus:bg-white focus:ring-4 focus:ring-primary-500/10 transition-all font-black text-gray-900"
+                                       placeholder="Default: {{ $device->hourly_rate }}">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-3">{{ __('sessions.multi_mode') }} (4 Players)</label>
+                            <div class="relative">
+                                <span class="absolute start-6 top-1/2 -translate-y-1/2 font-black text-gray-400">$</span>
+                                <input type="number" step="0.01" name="player_pricing[4]" 
+                                       value="{{ old('player_pricing.4', $device->playerPricing->where('player_count', 4)->first()?->price_per_hour) }}" 
+                                       class="w-full bg-gray-50 border-transparent rounded-[1.5rem] ps-10 pe-6 py-4 focus:bg-white focus:ring-4 focus:ring-primary-500/10 transition-all font-black text-gray-900"
+                                       placeholder="Default: {{ $device->hourly_rate }}">
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-[10px] text-gray-400 font-medium italic">Leave empty to use the standard hourly rate.</p>
+                </div>
             </div>
 
             <div class="pt-6 border-t border-gray-50 flex gap-4">

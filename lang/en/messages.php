@@ -32,4 +32,7 @@ return [
     'all_tenancies' => 'All Tenancies',
     'pricing_plans' => 'Pricing Plans',
     'system' => 'System',
+    'payment_failed' => 'Failed to process payment.',
+    'payment_success' => 'Payment processed successfully.',
+    'auto_settled' => 'Auto Settled on Close',
 ];

@@ -79,9 +79,12 @@
             </div>
 
             <!-- Actions -->
-            <div class="flex gap-3">
-                <form action="{{ route('devices.sessions.start', $device) }}" method="POST" class="flex-1" x-show="!hasSession">
+            <div class="flex flex-col gap-4">
+                <form action="{{ route('devices.sessions.start', $device) }}" method="POST" class="w-full space-y-4" x-show="!hasSession">
                     @csrf
+                    
+                    <x-player-mode-selector />
+
                     <button type="submit" 
                             class="w-full bg-gray-900 text-white font-black py-4 rounded-2xl hover:bg-black hover:shadow-xl hover:shadow-gray-200 active:scale-95 transition-all text-sm uppercase tracking-widest">
                         {{ __('sessions.start_session') }}

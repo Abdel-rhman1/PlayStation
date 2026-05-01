@@ -108,7 +108,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="{{ $moduleIcons[$module] ?? 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' }}"/>
                                 </svg>
                             </div>
-                            <h4 class="text-[10px] font-black text-gray-500 uppercase tracking-[0.15em]">{{ $module }}</h4>
+                            <h4 class="text-[10px] font-black text-gray-500 uppercase tracking-[0.15em]">{{ __('permissions.modules.' . strtolower($module)) }}</h4>
                             <div class="flex-1 h-px bg-gray-100"></div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 ps-2">
@@ -120,7 +120,9 @@
                                        {{ $checked ? 'checked' : '' }}
                                        class="w-4 h-4 rounded border-gray-300 {{ $c['text'] }} focus:ring-primary-500 transition-all shrink-0">
                                 <div class="min-w-0">
-                                    <p class="text-xs font-bold {{ $checked ? $c['text'] : 'text-gray-600' }} truncate transition-colors">{{ $permission->label }}</p>
+                                    <p class="text-xs font-bold {{ $checked ? $c['text'] : 'text-gray-600' }} truncate transition-colors">
+                                        {{ Lang::has("permissions.names.{$permission->name}") ? __("permissions.names.{$permission->name}") : $permission->name }}
+                                     </p>
                                     <p class="text-[9px] text-gray-400 font-black uppercase tracking-tighter">{{ $permission->name }}</p>
                                 </div>
                             </label>

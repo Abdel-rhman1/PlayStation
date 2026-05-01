@@ -111,7 +111,7 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
         $currentShift = $user->shifts()->active()->first();
         $shiftRevenue = 0;
         if ($currentShift) {
-            $shiftRevenue = $currentShift->sessions()->sum('cost') + 
+            $shiftRevenue = $currentShift->getSessionRevenue() + 
                            $currentShift->orders()->where('payment_status', 'paid')->sum('total_price');
         }
 
@@ -133,7 +133,9 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
     Route::group(['prefix' => 'devices', 'as' => 'devices.'], function() {
         Route::middleware('permission:devices.manage')->group(function() {
             Route::get('create', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'create'])->name('create');
-            Route::post('/', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'store'])->name('store');
+            Route::post('/', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'store'])
+                ->middleware('limit.devices')
+                ->name('store');
             Route::get('{device}/edit', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'edit'])->name('edit');
             Route::put('{device}', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'update'])->name('update');
             Route::delete('{device}', [\App\Domains\Inventory\Controllers\Web\DeviceController::class, 'destroy'])->name('destroy');
@@ -145,9 +147,13 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
         });
         
         // Dynamic Session Actions
-        Route::middleware(['permission:sessions.manage', 'shift-active'])->group(function() {
-            Route::post('{device}/start', [\App\Domains\Sessions\Controllers\Web\WebSessionController::class, 'start'])->name('sessions.start');
-            Route::post('{device}/stop', [\App\Domains\Sessions\Controllers\Web\WebSessionController::class, 'stop'])->name('sessions.stop');
+        Route::middleware(['permission:sessions.manage'])->group(function() {
+            Route::post('{device}/start', [\App\Domains\Sessions\Controllers\Web\WebSessionController::class, 'start'])
+                ->middleware('shift-active')
+                ->name('sessions.start');
+                
+            Route::post('{device}/stop', [\App\Domains\Sessions\Controllers\Web\WebSessionController::class, 'stop'])
+                ->name('sessions.stop');
         });
     });
 
@@ -188,7 +194,7 @@ Route::middleware(['auth', 'verified', 'identify-tenant'])->group(function () {
         });
 
         // Strategic Reports Module
-        Route::group(['prefix' => 'reports', 'as' => 'reports.'], function() {
+        Route::group(['prefix' => 'reports', 'as' => 'reports.', 'middleware' => 'plan.feature:reports'], function() {
             Route::get('/', [\App\Domains\Reports\Controllers\Web\ReportController::class, 'index'])->name('index');
         });
     });

@@ -38,6 +38,21 @@ class Device extends Model
         return $this->hasMany(DeviceLog::class);
     }
 
+    public function playerPricing(): HasMany
+    {
+        return $this->hasMany(DevicePlayerPricing::class);
+    }
+
+    /**
+     * Get the hourly rate for a specific player count.
+     * Falls back to device default hourly_rate if not found.
+     */
+    public function getHourlyRateForPlayers(?int $playerCount): float
+    {
+        return app(\App\Services\Pricing\PlayerPricingResolverService::class)
+            ->getPrice($this, $playerCount);
+    }
+
     public function activeSession()
     {
         return $this->hasOne(Session::class)->whereNull('ended_at')->latest();

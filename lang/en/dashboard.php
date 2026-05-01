@@ -12,6 +12,7 @@ return [
     'guest' => 'Guest',
     'unknown_device' => 'Unknown Device',
     'active' => 'Active',
+    'completed' => 'Completed',
     'no_recent_sessions' => 'No recent sessions found.',
     'no_data_available' => 'No data available yet.',
     'billing_summary' => 'Billing Summary',
@@ -22,4 +23,6 @@ return [
     'session_live_warning' => 'This session is currently live. Totals are calculated in real-time and will be finalized upon stopping.',
     'stop_session' => 'Stop Session',
     'stop_confirm' => 'Are you sure you want to stop this session? This will finalize the bill.',
+    'started_by' => 'Started By',
+    'ended_by' => 'Ended By',
 ];

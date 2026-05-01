@@ -1,0 +1,33 @@
+<?php
+return [
+    'modules' => [
+        'devices' => 'Devices',
+        'sessions' => 'Sessions',
+        'orders' => 'Orders',
+        'expenses' => 'Expenses',
+        'products' => 'Products',
+        'pos' => 'POS',
+        'reports' => 'Reports',
+        'settings' => 'Settings',
+        'users' => 'Users',
+        'finance' => 'Finance',
+        'dashboard' => 'Dashboard',
+    ],
+    'names' => [
+        'devices.manage' => 'Manage Devices',
+        'devices.view' => 'View Devices',
+        'sessions.manage' => 'Manage Sessions',
+        'orders.view' => 'View Orders',
+        'orders.export' => 'Export Orders',
+        'expenses.manage' => 'Manage Expenses',
+        'expenses.view' => 'View Expenses',
+        'products.manage' => 'Manage Products',
+        'pos.access' => 'Access POS',
+        'pos.orders' => 'Create Orders',
+        'reports.view' => 'View Reports',
+        'settings.manage' => 'Manage Settings',
+        'users.manage' => 'Manage Users',
+        'finance.view' => 'View Finance',
+        'dashboard.stats' => 'Dashboard Stats',
+    ],
+];

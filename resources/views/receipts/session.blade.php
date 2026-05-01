@@ -204,8 +204,8 @@
 <body onload="window.print()">
 
     <div class="no-print-bar">
-        <a href="{{ route('dashboard') }}" class="action-btn btn-secondary">← Back</a>
-        <button onclick="window.print()" class="action-btn btn-primary">Print Receipt</button>
+        <a href="{{ route('dashboard') }}" class="action-btn btn-secondary">← {{ __('messages.cancel') }}</a>
+        <button onclick="window.print()" class="action-btn btn-primary">{{ __('pos.print_receipt') }}</button>
     </div>
 
     <div class="receipt-card">
@@ -215,68 +215,64 @@
         </div>
 
         <div class="meta-info">
-            <span>ID: #{{ substr(md5($data['generated_at']), 0, 6) }}</span>
+            <span>{{ __('sessions.id') }} #{{ substr(md5($data['generated_at']), 0, 6) }}</span>
             <span>{{ date('d M Y, H:i') }}</span>
         </div>
 
         <div class="session-section">
-            <span class="section-title">Session Usage</span>
+            <span class="section-title">{{ __('sessions.usage_details') }}</span>
             <div class="detail-row">
-                <span>Machine</span>
+                <span>{{ __('sessions.machine') }}</span>
                 <span>{{ $data['device']['name'] }}</span>
             </div>
             <div class="detail-row">
-                <span>Time Period</span>
+                <span>{{ __('sessions.time_period') }}</span>
                 <span>{{ date('H:i', strtotime($data['device']['start_time'])) }} - {{ date('H:i', strtotime($data['device']['end_time'])) }}</span>
             </div>
             <div class="detail-row">
-                <span>Duration</span>
+                <span>{{ __('sessions.duration') }}</span>
                 <span>{{ $data['device']['duration'] }}</span>
             </div>
             <div class="detail-row">
-                <span>Usage Cost</span>
+                <span>{{ __('sessions.usage_cost') }}</span>
                 <span>{{ __('messages.currency_symbol') }} {{ number_format($data['device']['price'], 2) }}</span>
             </div>
+            @if(!empty($data['tracking']['started_by']))
+            <div class="detail-row" style="margin-top: 10px; border-top: 0.5px solid #f9f9f9; padding-top: 6px;">
+                <span>{{ __('dashboard.started_by') }}</span>
+                <span>{{ $data['tracking']['started_by'] }}</span>
+            </div>
+            @endif
+            @if(!empty($data['tracking']['ended_by']))
+            <div class="detail-row">
+                <span>{{ __('dashboard.ended_by') }}</span>
+                <span>{{ $data['tracking']['ended_by'] }}</span>
+            </div>
+            @endif
         </div>
 
-        @if(!empty($data['unpaid_orders']['items']))
+        @php 
+            $allOrders = array_merge($data['unpaid_orders']['items'], $data['paid_orders']['items']);
+        @endphp
+
+        @if(!empty($allOrders))
         <div class="buffet-section" style="margin-top: 25px;">
-            <span class="section-title">Cafeteria Items (To Pay)</span>
+            <span class="section-title">{{ __('sessions.orders_details') }}</span>
             <table class="order-table">
                 <thead>
                     <tr>
-                        <th>Product</th>
-                        <th style="text-align: right">Total</th>
+                        <th style="text-align: {{ app()->getLocale() == 'ar' ? 'right' : 'left' }}">{{ __('sessions.product') }}</th>
+                        <th style="text-align: {{ app()->getLocale() == 'ar' ? 'left' : 'right' }}">{{ __('sessions.total') }}</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($data['unpaid_orders']['items'] as $item)
+                    @foreach($allOrders as $item)
                     <tr>
                         <td>
                             <span class="item-name">{{ $item['product_name'] }}</span>
                             <span class="item-meta">{{ $item['quantity'] }} x {{ __('messages.currency_symbol') }} {{ number_format($item['unit_price'], 2) }}</span>
                         </td>
-                        <td style="text-align: right; font-weight: 800;">
-                            {{ __('messages.currency_symbol') }} {{ number_format($item['total_price'], 2) }}
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-        @endif
-
-        @if(!empty($data['paid_orders']['items']))
-        <div class="buffet-section" style="margin-top: 25px; opacity: 0.6;">
-            <span class="section-title">Cafeteria Items (Already Paid)</span>
-            <table class="order-table">
-                <tbody>
-                    @foreach($data['paid_orders']['items'] as $item)
-                    <tr>
-                        <td style="font-size: 10px;">
-                            <span>{{ $item['product_name'] }} ({{ $item['quantity'] }})</span>
-                        </td>
-                        <td style="text-align: right; font-size: 10px; font-weight: 600;">
+                        <td style="text-align: {{ app()->getLocale() == 'ar' ? 'left' : 'right' }}; font-weight: 800;">
                             {{ __('messages.currency_symbol') }} {{ number_format($item['total_price'], 2) }}
                         </td>
                     </tr>
@@ -288,29 +284,30 @@
 
         <div class="summary-box">
             <div class="detail-row">
-                <span>Usage Cost</span>
+                <span>{{ __('sessions.usage_cost') }}</span>
                 <span>{{ __('messages.currency_symbol') }} {{ number_format($data['device']['price'], 2) }}</span>
             </div>
-            @if($data['unpaid_orders']['total'] > 0)
+            @php 
+                $ordersTotal = $data['unpaid_orders']['total'] + $data['paid_orders']['total'];
+            @endphp
+            @if($ordersTotal > 0)
             <div class="detail-row">
-                <span>Unpaid Items</span>
-                <span>{{ __('messages.currency_symbol') }} {{ number_format($data['unpaid_orders']['total'], 2) }}</span>
+                <span>{{ __('sessions.items_total') }}</span>
+                <span>{{ __('messages.currency_symbol') }} {{ number_format($ordersTotal, 2) }}</span>
             </div>
             @endif
-            @if($data['paid_orders']['total'] > 0)
-            <div class="detail-row" style="opacity: 0.5;">
-                <span>Previously Paid</span>
-                <span>- {{ __('messages.currency_symbol') }} {{ number_format($data['paid_orders']['total'], 2) }}</span>
-            </div>
-            @endif
+            
             <div class="grand-total">
-                <span class="grand-total-label">Final Amount Due</span>
+                <span class="grand-total-label">{{ __('sessions.final_due') }}</span>
                 <span class="grand-total-amount">{{ __('messages.currency_symbol') }} {{ number_format($data['due_amount'], 2) }}</span>
             </div>
+
+            @if($data['due_amount'] < $data['grand_total'])
             <div class="detail-row" style="margin-top: 10px; opacity: 0.4; font-size: 8px;">
-                <span>Total Session Value</span>
+                <span>{{ __('sessions.total_value') }}</span>
                 <span>{{ __('messages.currency_symbol') }} {{ number_format($data['grand_total'], 2) }}</span>
             </div>
+            @endif
         </div>
 
         <div class="qr-section">
@@ -318,7 +315,7 @@
         </div>
 
         <div class="footer">
-            <p>GL HF! WE HOPE TO SEE YOU SOON</p>
+            <p>{{ __('sessions.thanks') }}</p>
             <p style="opacity: 0.5; font-size: 8px; margin-top: 10px;">{{ url('/') }}</p>
         </div>
     </div>

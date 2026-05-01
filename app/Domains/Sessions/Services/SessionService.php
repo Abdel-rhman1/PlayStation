@@ -24,7 +24,7 @@ class SessionService
     /**
      * Start a new session for a device.
      */
-    public function startSession(Device $device, int $userId): Session
+    public function startSession(Device $device, int $userId, ?int $playerCount = null): Session
     {
         if ($device->status === DeviceStatus::IN_USE) {
             $hasActiveSession = $device->activeSession()->exists();
@@ -41,7 +41,7 @@ class SessionService
             throw new DeviceNotAvailableException("Device {$device->name} is in an unavailable state: {$device->status->value}.");
         }
 
-        return DB::transaction(function () use ($device, $userId) {
+        return DB::transaction(function () use ($device, $userId, $playerCount) {
             // Optional: IoT Hardware call
             $this->deviceControlService->turnOn($device);
 
@@ -54,6 +54,8 @@ class SessionService
                 'started_at' => now(),
                 'status' => 'active',
                 'pricing_type' => 'per_hour',
+                'player_count' => $playerCount,
+                'started_by' => $userId,
             ]);
 
             DeviceLog::create([
@@ -107,11 +109,23 @@ class SessionService
 
             $billing = $this->billingService->calculateTotal($session);
             
+            // Record the ending shift if one is active
+            $activeShift = auth()->check() ? auth()->user()->shifts()->active()->first() : null;
+
             $session->update([
                 'ended_at'    => $endedAt,
                 'cost'        => $billing['device_price'],
                 'total_price' => $billing['grand_total'],
                 'status'      => 'completed',
+                'ended_by'    => $userId,
+                'ended_shift_id' => $activeShift ? $activeShift->id : null,
+            ]);
+
+            // Mark all session orders as paid upon closing
+            $session->orders()->where('payment_status', 'unpaid')->update([
+                'status' => 'paid',
+                'payment_status' => 'paid',
+                'paid_at' => $endedAt
             ]);
 
             // Store Receipt Snapshot

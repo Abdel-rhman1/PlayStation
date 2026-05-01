@@ -54,4 +54,21 @@ class Shift extends Model
     {
         return $this->hasMany(Expense::class);
     }
+
+    /**
+     * Calculate session revenue for this shift.
+     * Revenue belongs to the shift that ended the session.
+     */
+    public function getSessionRevenue(): float
+    {
+        return (float) Session::where('status', 'completed')
+            ->where(function($q) {
+                $q->where('ended_shift_id', $this->id)
+                  ->orWhere(function($sq) {
+                      $sq->whereNull('ended_shift_id')
+                         ->where('shift_id', $this->id);
+                  });
+            })
+            ->sum('cost');
+    }
 }

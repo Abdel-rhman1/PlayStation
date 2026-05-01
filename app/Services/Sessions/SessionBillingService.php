@@ -3,10 +3,15 @@
 namespace App\Services\Sessions;
 
 use App\Models\Session;
+use App\Services\Pricing\PlayerPricingResolverService;
 use Carbon\Carbon;
 
 class SessionBillingService
 {
+    public function __construct(
+        protected PlayerPricingResolverService $pricingResolver
+    ) {}
+
     /**
      * Calculate the full statement for a session.
      */
@@ -39,7 +44,7 @@ class SessionBillingService
      */
     public function generateReceiptData(Session $session): array
     {
-        $session->load(['device', 'orders.items.product']);
+        $session->load(['device', 'orders.items.product', 'startedBy', 'endedBy']);
         $billing = $this->calculateTotal($session);
 
         $endTime = $session->ended_at ?: now();
@@ -75,6 +80,10 @@ class SessionBillingService
                 'duration'   => sprintf('%dh %dm %ds', $duration->h, $duration->i, $duration->s),
                 'price'      => $billing['device_price'],
             ],
+            'tracking' => [
+                'started_by' => $session->startedBy?->name,
+                'ended_by'   => $session->endedBy?->name,
+            ],
             'paid_orders' => [
                 'items' => $paidOrdersList->toArray(),
                 'total' => $billing['paid_orders_total'],
@@ -100,8 +109,8 @@ class SessionBillingService
 
         $device = $session->device;
         
-        // Base Logic: Fixed entry fee + (Hourly Rate * Hours)
-        $hourlyRate = (float) $device->hourly_rate;
+        $hourlyRate = $this->pricingResolver->getPrice($device, $session->player_count);
+            
         $fixedRate = (float) $device->fixed_rate;
 
         return round($fixedRate + ($durationInHours * $hourlyRate), 2);

@@ -33,6 +33,19 @@ class RoleMiddleware
             }
         }
 
-        abort(403, 'You do not have the required role to access this resource.');
+        $message = 'You do not have the required role to access this resource.';
+
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+            ], 403);
+        }
+
+        if (!$request->isMethod('GET')) {
+            return redirect()->back()->with('error', $message);
+        }
+
+        abort(403, $message);
     }
 }

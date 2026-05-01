@@ -20,6 +20,9 @@ class StoreDeviceRequest extends FormRequest
             'ip_address' => 'nullable|ip',
             'hourly_rate' => 'required|numeric|min:0',
             'fixed_rate' => 'nullable|numeric|min:0',
+            'player_pricing' => 'nullable|array',
+            'player_pricing.2' => 'nullable|numeric|min:0',
+            'player_pricing.4' => 'nullable|numeric|min:0',
         ];
     }
 }

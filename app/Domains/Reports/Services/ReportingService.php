@@ -16,8 +16,8 @@ class ReportingService
     public function getFinancialSummary(array $filters): array
     {
         $sessionRevenue = Session::where('status', 'completed')
-            ->when(isset($filters['from']), fn($q) => $q->whereDate('started_at', '>=', $filters['from']))
-            ->when(isset($filters['to']), fn($q) => $q->whereDate('started_at', '<=', $filters['to']))
+            ->when(isset($filters['from']), fn($q) => $q->whereDate('ended_at', '>=', $filters['from']))
+            ->when(isset($filters['to']), fn($q) => $q->whereDate('ended_at', '<=', $filters['to']))
             ->sum('cost');
 
         $posRevenue = Order::where('payment_status', 'paid')
@@ -52,7 +52,7 @@ class ReportingService
         return \App\Models\Device::select('devices.name', 'devices.id')
             ->withSum(['sessions' => function($q) {
                 $q->where('status', 'completed')
-                  ->whereDate('started_at', today());
+                  ->whereDate('ended_at', today());
             }], 'cost')
             ->withCount(['sessions' => function($q) {
                 $q->whereDate('started_at', today());

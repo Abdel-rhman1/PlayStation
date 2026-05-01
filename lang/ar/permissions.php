@@ -1,0 +1,33 @@
+<?php
+return [
+    'modules' => [
+        'devices' => 'الأجهزة',
+        'sessions' => 'الجلسات',
+        'orders' => 'الطلبات',
+        'expenses' => 'المصاريف',
+        'products' => 'المنتجات',
+        'pos' => 'نقطة البيع',
+        'reports' => 'التقارير',
+        'settings' => 'الإعدادات',
+        'users' => 'المستخدمين',
+        'finance' => 'المالية',
+        'dashboard' => 'لوحة التحكم',
+    ],
+    'names' => [
+        'devices.manage' => 'إدارة الأجهزة',
+        'devices.view' => 'عرض الأجهزة',
+        'sessions.manage' => 'إدارة الجلسات',
+        'orders.view' => 'عرض الطلبات',
+        'orders.export' => 'تصدير الطلبات',
+        'expenses.manage' => 'إدارة المصاريف',
+        'expenses.view' => 'عرض المصاريف',
+        'products.manage' => 'إدارة المنتجات',
+        'pos.access' => 'دخول نقطة البيع',
+        'pos.orders' => 'إنشاء الطلبات',
+        'reports.view' => 'عرض التقارير',
+        'settings.manage' => 'إدارة الإعدادات',
+        'users.manage' => 'إدارة المستخدمين',
+        'finance.view' => 'عرض المالية',
+        'dashboard.stats' => 'إحصائيات لوحة التحكم',
+    ],
+];

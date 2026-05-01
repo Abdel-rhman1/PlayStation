@@ -42,7 +42,15 @@ class POSService
             $totalPrice = 0;
 
             foreach ($items as $item) {
-                $product = Product::findOrFail($item['product_id']);
+                $product = Product::lockForUpdate()->findOrFail($item['product_id']);
+                
+                if ($product->stock < $item['quantity']) {
+                    throw new \Exception(__('products.insufficient_stock', [
+                        'name' => $product->name,
+                        'stock' => $product->stock
+                    ]));
+                }
+
                 $itemTotal = $product->price * $item['quantity'];
 
                 $order->items()->create([
@@ -51,6 +59,9 @@ class POSService
                     'unit_price' => $product->price,
                     'total_price' => $itemTotal,
                 ]);
+
+                // Decrease stock
+                $product->decrement('stock', $item['quantity']);
 
                 $totalPrice += $itemTotal;
             }

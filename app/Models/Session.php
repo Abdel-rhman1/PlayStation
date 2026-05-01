@@ -23,6 +23,10 @@ class Session extends Model
         'pricing_type',
         'status',
         'shift_id',
+        'player_count',
+        'started_by',
+        'ended_by',
+        'ended_shift_id',
     ];
 
     protected function casts(): array
@@ -32,6 +36,7 @@ class Session extends Model
             'ended_at'   => 'datetime',
             'cost'       => 'decimal:2',
             'total_price'=> 'decimal:2',
+            'player_count' => 'integer',
         ];
     }
 
@@ -50,6 +55,21 @@ class Session extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function startedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'started_by');
+    }
+
+    public function endedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'ended_by');
+    }
+
+    public function endedShift(): BelongsTo
+    {
+        return $this->belongsTo(Shift::class, 'ended_shift_id');
+    }
+
     /**
      * Duration in minutes (always positive, uses ended_at or now for active sessions).
      */
@@ -65,6 +85,18 @@ class Session extends Model
     public function getRealTimeTotalsAttribute(): array
     {
         return app(\App\Services\Sessions\SessionBillingService::class)->calculateRealTimeTotals($this);
+    }
+
+    /**
+     * Get the player mode label based on the player count.
+     */
+    public function getPlayerModeLabelAttribute(): string
+    {
+        return match ($this->player_count) {
+            2 => __('sessions.single_mode'),
+            4 => __('sessions.multi_mode'),
+            default => __('sessions.default_mode'),
+        };
     }
 
     /**

@@ -20,7 +20,12 @@
                 <h2 class="text-3xl font-heading font-black text-gray-900 tracking-tight">{{ $session->device->name }}</h2>
                 <div class="flex items-center gap-2 mt-1">
                     <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                    <p class="text-sm font-bold text-gray-500 uppercase tracking-widest">{{ __('dashboard.active') }} • {{ $session->started_at->format('H:i A') }}</p>
+                    <p class="text-sm font-bold text-gray-500 uppercase tracking-widest">
+                        {{ __('dashboard.active') }} • {{ $session->started_at->format('H:i A') }}
+                        @if($session->player_count)
+                            • {{ $session->player_mode_label }}
+                        @endif
+                    </p>
                 </div>
             </div>
         </div>
@@ -38,18 +43,30 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-2">
-                <a href="{{ route('pos.index', ['device_id' => $session->device_id]) }}" class="bg-gray-900 text-white px-6 py-4 rounded-2xl text-sm font-bold shadow-lg hover:bg-gray-800 transition-all flex items-center gap-2">
+            <div class="flex items-center gap-3">
+                <a href="{{ route('sessions.receipt', $session) }}" class="bg-white text-gray-900 border border-gray-100 px-6 py-4 rounded-2xl text-sm font-bold shadow-sm hover:bg-gray-50 transition-all flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    {{ __('pos.print_receipt') }}
+                </a>
+                <a href="{{ route('pos.index', ['session_id' => $session->id]) }}" class="bg-primary-600 text-white px-6 py-4 rounded-2xl text-sm font-bold shadow-lg shadow-primary-100 hover:bg-primary-700 transition-all flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                     {{ __('pos.new_order') }}
                 </a>
-                <form action="{{ route('sessions.stop', $session->device) }}" method="POST" onsubmit="return confirm('{{ __('dashboard.stop_confirm') }}')">
-                    @csrf
-                    <button type="submit" class="bg-red-600 text-white px-6 py-4 rounded-2xl text-sm font-bold shadow-lg shadow-red-100 hover:bg-red-700 transition-all flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                        {{ __('dashboard.stop_session') }}
-                    </button>
-                </form>
+                
+                @if($session->status === 'active')
+                    <form action="{{ route('devices.sessions.stop', $session->device) }}" method="POST" onsubmit="return confirm('{{ __('dashboard.stop_confirm') }}')">
+                        @csrf
+                        <button type="submit" class="bg-red-600 text-white px-6 py-4 rounded-2xl text-sm font-bold shadow-lg shadow-red-100 hover:bg-red-700 transition-all flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            {{ __('dashboard.stop_session') }}
+                        </button>
+                    </form>
+                @else
+                    <div class="px-6 py-4 bg-gray-50 rounded-2xl border border-gray-100 flex flex-col items-end">
+                        <span class="text-[9px] font-black text-gray-400 uppercase tracking-widest">{{ __('sessions.final_total') }}</span>
+                        <span class="text-xl font-heading font-black text-primary-600">{{ __('messages.currency_symbol') }} {{ number_format($session->total_price, 2) }}</span>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -90,7 +107,7 @@
                             </td>
                             <td class="px-8 py-6">
                                 <template x-if="status === 'paid'">
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 text-[10px] font-black uppercase tracking-widest">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-500 text-white text-[10px] font-black uppercase tracking-widest shadow-sm shadow-green-100">
                                         <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                                         {{ __('orders.paid') }}
                                     </span>
@@ -100,17 +117,8 @@
                                 </template>
                             </td>
                             <td class="px-8 py-6 text-end">
-                                <template x-if="status !== 'paid'">
-                                    <button @click="payOrder('{{ $order->id }}', {{ $order->total_price }}, $data)" 
-                                            :disabled="paying"
-                                            class="text-primary-600 font-black text-xs hover:underline uppercase tracking-widest disabled:opacity-50">
-                                        <span x-show="!paying">{{ __('orders.pay_now') }}</span>
-                                        <span x-show="paying" class="flex items-center gap-1">
-                                            <svg class="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                            ...
-                                        </span>
-                                    </button>
-                                </template>
+                                <!-- Individual payment button removed per request - all orders paid on close -->
+                                <span class="text-[10px] font-black text-gray-300 uppercase tracking-widest italic">{{ __('messages.auto_settled') }}</span>
                             </td>
                         </tr>
                         @empty
@@ -133,12 +141,43 @@
                 <div class="space-y-6 relative z-10">
                     <!-- Device Cost -->
                     <div class="flex items-center justify-between group">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('devices.usage_cost') }}</span>
-                            <span class="text-sm font-bold text-gray-900 group-hover:text-primary-600 transition-colors">{{ __('dashboard.running_time') }}</span>
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            </div>
+                            <div class="flex-1 flex flex-col">
+                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('dashboard.running_time') }}</span>
+                                <span class="text-sm font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
+                                    {{ $session->started_at->diff($session->ended_at ?: now())->format('%h:%i:%s') }}
+                                </span>
+                            </div>
                         </div>
                         <span class="text-xl font-black text-gray-900" x-text="'{{ __('messages.currency_symbol') }} ' + runningCost.toFixed(2)"></span>
                     </div>
+
+                    @if($session->startedBy)
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            </div>
+                            <div class="flex-1 flex flex-col">
+                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('dashboard.started_by') }}</span>
+                                <span class="text-sm font-bold text-gray-900">{{ $session->startedBy->name }}</span>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if($session->endedBy)
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-primary-50 group-hover:text-primary-600 transition-colors">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            </div>
+                            <div class="flex-1 flex flex-col">
+                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">{{ __('dashboard.ended_by') }}</span>
+                                <span class="text-sm font-bold text-gray-900">{{ $session->endedBy->name }}</span>
+                            </div>
+                        </div>
+                    @endif
 
                     <div class="h-px w-full bg-gray-50"></div>
 
@@ -278,7 +317,7 @@
                         this.addToast(result.message, 'error');
                     }
                 } catch (e) {
-                    this.addToast('Failed to process payment.', 'error');
+                    this.addToast('{{ __('messages.payment_failed') }}', 'error');
                 } finally {
                     row.paying = false;
                 }

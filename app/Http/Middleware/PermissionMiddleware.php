@@ -29,7 +29,20 @@ class PermissionMiddleware
 
         foreach ($permissions as $permission) {
             if (!$request->user()->can(trim($permission))) {
-                abort(403, 'You do not have the required permission to access this resource.');
+                $message = 'You do not have the required permission to access this resource.';
+
+                if ($request->expectsJson() || $request->is('api/*')) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => $message,
+                    ], 403);
+                }
+
+                if (!$request->isMethod('GET')) {
+                    return redirect()->back()->with('error', $message);
+                }
+
+                abort(403, $message);
             }
         }
 

@@ -76,8 +76,8 @@ class ShiftService
      */
     public function getShiftSummary(Shift $shift): array
     {
-        $sessionRevenue = $shift->sessions()->sum('cost');
-        $orderRevenue = $shift->orders()->sum('total_price');
+        $sessionRevenue = $shift->getSessionRevenue();
+        $orderRevenue = $shift->orders()->where('payment_status', 'paid')->sum('total_price');
         $expensesTotal = $shift->expenses()->sum('amount');
 
         $totalRevenue = $sessionRevenue + $orderRevenue;
@@ -100,8 +100,8 @@ class ShiftService
      */
     public function calculateShiftSummary(Shift $shift): array
     {
-        $sessionsTotal = (float) $shift->sessions()->sum('cost');
-        $ordersTotal   = (float) $shift->orders()->sum('total_price');
+        $sessionsTotal = $shift->getSessionRevenue();
+        $ordersTotal   = (float) $shift->orders()->where('payment_status', 'paid')->sum('total_price');
         $expensesTotal = (float) $shift->expenses()->sum('amount');
 
         return [

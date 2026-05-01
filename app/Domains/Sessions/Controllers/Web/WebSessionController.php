@@ -72,7 +72,7 @@ class WebSessionController extends Controller
     public function start(Device $device, Request $request): RedirectResponse
     {
         try {
-            $this->sessionService->startSession($device, auth()->id());
+            $this->sessionService->startSession($device, auth()->id(), $request->player_count);
             return back()->with('success', __('notifications.session_started'));
         } catch (DeviceNotAvailableException $e) {
             return back()->with('error', $e->getMessage());

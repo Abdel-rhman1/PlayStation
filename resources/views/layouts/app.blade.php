@@ -12,9 +12,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS & Alpine JS -->
+    <!-- Tailwind CSS, Alpine JS, SweetAlert2 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         tailwind.config = {
@@ -188,15 +189,36 @@
             this.confirmModal = { open: true, title, message, onConfirm: callback };
         },
         init() {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+
             @if(session('success'))
-                this.addToast('{{ session('success') }}', 'success');
+                Toast.fire({ icon: 'success', title: '{{ session('success') }}' });
             @endif
             @if(session('error'))
-                this.addToast('{{ session('error') }}', 'error');
+                Swal.fire({ 
+                    icon: 'error', 
+                    title: 'Access Restricted',
+                    text: '{{ session('error') }}',
+                    confirmButtonColor: '#2563eb',
+                    customClass: {
+                        popup: 'rounded-[2rem]',
+                        confirmButton: 'rounded-2xl px-6 py-3 font-bold'
+                    }
+                });
             @endif
             @if($errors->any())
                 @foreach($errors->all() as $error)
-                    this.addToast('{{ $error }}', 'error');
+                    Toast.fire({ icon: 'error', title: '{{ $error }}' });
                 @endforeach
             @endif
         }

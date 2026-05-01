@@ -32,4 +32,7 @@ return [
     'all_tenancies' => 'جميع المستأجرين',
     'pricing_plans' => 'خطط الأسعار',
     'system' => 'النظام',
+    'payment_failed' => 'فشل معالجة الدفع.',
+    'payment_success' => 'تمت معالجة الدفع بنجاح.',
+    'auto_settled' => 'تمت التسوية تلقائياً عند الإغلاق',
 ];
